@@ -213,7 +213,7 @@ export default function TaskManager() {
 
   return (
     <div>
-      <form onSubmit={addTask} className="pinned-panel" style={{ padding: '2.5rem', marginBottom: '3.5rem', maxWidth: '800px', margin: '0 auto 3.5rem auto' }}>
+      <form onSubmit={addTask} className="pinned-panel" style={{ padding: '2rem', marginBottom: '2.5rem', maxWidth: '800px', margin: '0 auto 2.5rem auto' }}>
         <div className="pin blue" style={{ top: '-8px', left: '-8px' }}></div>
         <div className="pin purple" style={{ top: '-8px', right: '-8px' }}></div>
         <div className="pin yellow" style={{ bottom: '-8px', left: '-8px' }}></div>
@@ -237,13 +237,13 @@ export default function TaskManager() {
           />
         </div>
         
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, position: 'relative', minWidth: '180px' }}>
-            <Calendar size={16} color="var(--pastel-yellow)" style={{ position: 'absolute', left: '12px', top: '16px', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }} />
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, position: 'relative', minWidth: '160px' }}>
+            <Calendar size={16} color="var(--pastel-yellow)" style={{ position: 'absolute', left: '12px', top: '15px', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }} />
             <input type="datetime-local" className="input-field select-field" style={{ paddingLeft: '2.5rem', cursor: 'pointer', color: dueDate ? 'var(--text-main)' : 'rgba(255,255,255,0.4)', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.15)' }} value={dueDate} onChange={e => setDueDate(e.target.value)} />
           </div>
           <select 
-            className="input-field select-field" style={{ flex: 1, minWidth: '140px', cursor: 'pointer' }}
+            className="input-field select-field" style={{ flex: 1, minWidth: '90px', cursor: 'pointer' }}
             value={category} onChange={e => setCategory(e.target.value)}
           >
             <option value="Work">Corporate</option>
@@ -252,15 +252,15 @@ export default function TaskManager() {
           </select>
           
           <select 
-            className="input-field select-field" style={{ flex: 1, minWidth: '140px', cursor: 'pointer' }}
+            className="input-field select-field" style={{ flex: 1, minWidth: '90px', cursor: 'pointer' }}
             value={priority} onChange={e => setPriority(e.target.value)}
           >
-            <option value="low">Low Priority</option>
-            <option value="medium">Medium Priority</option>
-            <option value="high">High Priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
           </select>
           
-          <button type="submit" className="btn-primary" disabled={!text.trim() || submitting} style={{ flex: 1, minWidth: '160px' }}>
+          <button type="submit" className="btn-primary" disabled={!text.trim() || submitting} style={{ flex: 1, minWidth: '100px' }}>
             {submitting ? <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> : <Plus size={20} />}
             Add Task
           </button>
