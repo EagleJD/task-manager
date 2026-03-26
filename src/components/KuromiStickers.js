@@ -33,30 +33,15 @@ const SOURCES = [
   '/kuromi-stickers/kuromi-07-01-soft.png',
 ];
 
-const CLUSTERS = [
-  { x: 7, y: 6, count: 14, spreadX: 10, spreadY: 9, sizeMin: 92, sizeMax: 170, opacity: [0.82, 0.98] },
-  { x: 24, y: 8, count: 12, spreadX: 12, spreadY: 9, sizeMin: 78, sizeMax: 148, opacity: [0.58, 0.88] },
-  { x: 46, y: 9, count: 12, spreadX: 13, spreadY: 10, sizeMin: 78, sizeMax: 144, opacity: [0.52, 0.82] },
-  { x: 70, y: 7, count: 12, spreadX: 13, spreadY: 10, sizeMin: 82, sizeMax: 150, opacity: [0.58, 0.86] },
-  { x: 92, y: 8, count: 14, spreadX: 10, spreadY: 9, sizeMin: 94, sizeMax: 172, opacity: [0.82, 0.98] },
-  { x: 13, y: 26, count: 10, spreadX: 11, spreadY: 10, sizeMin: 76, sizeMax: 142, opacity: [0.6, 0.9] },
-  { x: 35, y: 25, count: 12, spreadX: 13, spreadY: 10, sizeMin: 74, sizeMax: 132, opacity: [0.46, 0.78] },
-  { x: 56, y: 28, count: 13, spreadX: 13, spreadY: 11, sizeMin: 74, sizeMax: 136, opacity: [0.44, 0.76] },
-  { x: 78, y: 26, count: 11, spreadX: 12, spreadY: 10, sizeMin: 76, sizeMax: 140, opacity: [0.58, 0.86] },
-  { x: 6, y: 48, count: 14, spreadX: 10, spreadY: 11, sizeMin: 88, sizeMax: 166, opacity: [0.76, 0.95] },
-  { x: 28, y: 48, count: 11, spreadX: 12, spreadY: 10, sizeMin: 76, sizeMax: 136, opacity: [0.48, 0.76] },
-  { x: 50, y: 50, count: 12, spreadX: 12, spreadY: 11, sizeMin: 76, sizeMax: 136, opacity: [0.4, 0.68] },
-  { x: 72, y: 48, count: 11, spreadX: 12, spreadY: 10, sizeMin: 76, sizeMax: 136, opacity: [0.5, 0.8] },
-  { x: 94, y: 48, count: 14, spreadX: 10, spreadY: 11, sizeMin: 88, sizeMax: 166, opacity: [0.76, 0.95] },
-  { x: 16, y: 72, count: 11, spreadX: 11, spreadY: 11, sizeMin: 76, sizeMax: 142, opacity: [0.58, 0.88] },
-  { x: 39, y: 73, count: 12, spreadX: 12, spreadY: 11, sizeMin: 76, sizeMax: 138, opacity: [0.46, 0.74] },
-  { x: 61, y: 74, count: 12, spreadX: 12, spreadY: 11, sizeMin: 76, sizeMax: 138, opacity: [0.44, 0.72] },
-  { x: 84, y: 72, count: 11, spreadX: 11, spreadY: 11, sizeMin: 78, sizeMax: 144, opacity: [0.58, 0.88] },
-  { x: 8, y: 92, count: 14, spreadX: 10, spreadY: 8, sizeMin: 96, sizeMax: 176, opacity: [0.82, 0.98] },
-  { x: 30, y: 92, count: 11, spreadX: 12, spreadY: 8, sizeMin: 80, sizeMax: 146, opacity: [0.54, 0.82] },
-  { x: 52, y: 93, count: 12, spreadX: 12, spreadY: 8, sizeMin: 78, sizeMax: 142, opacity: [0.46, 0.74] },
-  { x: 74, y: 92, count: 11, spreadX: 12, spreadY: 8, sizeMin: 80, sizeMax: 146, opacity: [0.54, 0.82] },
-  { x: 94, y: 92, count: 14, spreadX: 10, spreadY: 8, sizeMin: 98, sizeMax: 178, opacity: [0.82, 0.98] },
+const CLUSTER_POINTS = [
+  [4, 5], [14, 5], [24, 5], [34, 5], [44, 5], [54, 5], [64, 5], [74, 5], [84, 5], [94, 5],
+  [8, 18], [19, 18], [30, 18], [41, 18], [52, 18], [63, 18], [74, 18], [85, 18], [96, 18],
+  [4, 31], [15, 31], [26, 31], [37, 31], [48, 31], [59, 31], [70, 31], [81, 31], [92, 31],
+  [9, 44], [20, 44], [31, 44], [42, 44], [53, 44], [64, 44], [75, 44], [86, 44], [97, 44],
+  [4, 57], [15, 57], [26, 57], [37, 57], [48, 57], [59, 57], [70, 57], [81, 57], [92, 57],
+  [8, 70], [19, 70], [30, 70], [41, 70], [52, 70], [63, 70], [74, 70], [85, 70], [96, 70],
+  [4, 83], [14, 83], [24, 83], [34, 83], [44, 83], [54, 83], [64, 83], [74, 83], [84, 83], [94, 83],
+  [8, 95], [19, 95], [30, 95], [41, 95], [52, 95], [63, 95], [74, 95], [85, 95], [96, 95],
 ];
 
 function createRandom(seed) {
@@ -74,35 +59,26 @@ function clamp(value, min, max) {
 }
 
 function buildStickers() {
-  const placements = [];
+  const random = createRandom(52);
 
-  CLUSTERS.forEach((cluster, clusterIndex) => {
-    const random = createRandom(clusterIndex + 11);
+  return CLUSTER_POINTS.flatMap(([x, y], clusterIndex) => {
+    const count = 4 + (clusterIndex % 3);
 
-    for (let i = 0; i < cluster.count; i += 1) {
-      const size =
-        cluster.sizeMin + Math.round((cluster.sizeMax - cluster.sizeMin) * random());
-      const offsetX = (random() - 0.5) * 2 * cluster.spreadX;
-      const offsetY = (random() - 0.5) * 2 * cluster.spreadY;
-      const top = clamp(cluster.y + offsetY, -3, 101);
-      const left = clamp(cluster.x + offsetX, -4, 104);
-      const opacity =
-        cluster.opacity[0] +
-        (cluster.opacity[1] - cluster.opacity[0]) * random();
+    return Array.from({ length: count }, (_, itemIndex) => {
+      const left = clamp(x + (random() - 0.5) * 9.5, -2, 102);
+      const top = clamp(y + (random() - 0.5) * 9.5, -2, 102);
+      const size = 114 + Math.round((random() - 0.5) * 18);
+      const rotation = Math.round((random() - 0.5) * 30);
 
-      placements.push({
-        src: SOURCES[(clusterIndex * 7 + i * 3 + Math.floor(random() * SOURCES.length)) % SOURCES.length],
-        size,
-        top: `${top}%`,
+      return {
+        src: SOURCES[(clusterIndex * 5 + itemIndex * 7 + Math.floor(random() * 11)) % SOURCES.length],
         left: `${left}%`,
-        rotation: `${Math.round((random() - 0.5) * 50)}deg`,
-        opacity: Number(opacity.toFixed(3)),
-        zIndex: 1 + Math.floor(random() * 6),
-      });
-    }
+        top: `${top}%`,
+        size,
+        rotation: `${rotation}deg`,
+      };
+    });
   });
-
-  return placements;
 }
 
 const STICKERS = buildStickers();
@@ -142,8 +118,8 @@ export default function KuromiStickers() {
           style={{
             top: sticker.top,
             left: sticker.left,
-            opacity: sticker.opacity,
-            zIndex: sticker.zIndex,
+            opacity: 0.64,
+            zIndex: 1 + (index % 4),
             transform: `translate(-50%, -50%) rotate(${sticker.rotation})`,
           }}
         >

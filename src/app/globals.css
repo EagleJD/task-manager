@@ -59,7 +59,7 @@ select {
   z-index: 9;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2.25rem 1.5rem 4rem;
+  padding: 7rem 1.5rem 4rem;
 }
 
 .sticker-field {
@@ -74,6 +74,20 @@ select {
   position: absolute;
   user-select: none;
   will-change: transform;
+}
+
+.top-bookmarks {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 14;
+  display: flex;
+  gap: 1rem;
+  transform: translateX(-50%);
+  width: min(100%, 640px);
+  justify-content: flex-end;
+  padding-right: 1.4rem;
+  pointer-events: none;
 }
 
 .hero-diary {
@@ -138,14 +152,6 @@ select {
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.65);
 }
 
-.bookmark-strip {
-  position: absolute;
-  top: 0.65rem;
-  right: 1.35rem;
-  display: flex;
-  gap: 0.85rem;
-}
-
 .bookmark {
   position: relative;
   display: flex;
@@ -154,6 +160,7 @@ select {
   gap: 0.1rem;
   min-width: 88px;
   padding: 1rem 1rem 1.9rem;
+  margin-top: -0.1rem;
   border-radius: 16px 16px 30px 30px;
   clip-path: polygon(0 0, 100% 0, 100% 84%, 68% 84%, 50% 100%, 32% 84%, 0 84%);
   box-shadow:
@@ -582,30 +589,30 @@ select {
   }
 
   .sticker-cloud {
-    transform: translate(-50%, -50%) scale(0.94) !important;
+    transform: translate(-50%, -50%) scale(0.92) !important;
   }
 }
 
 @media (max-width: 900px) {
   .container {
-    padding-top: 1.75rem;
-  }
-
-  .bookmark-strip {
-    top: auto;
-    right: 1rem;
-    bottom: -1.65rem;
+    padding-top: 6.4rem;
   }
 
   .hero-diary {
-    margin-bottom: 3.8rem;
+    margin-bottom: 3rem;
     padding-top: 3.9rem;
+  }
+
+  .top-bookmarks {
+    justify-content: center;
+    padding-right: 0;
   }
 }
 
 @media (max-width: 768px) {
   .container {
     padding-inline: 1rem;
+    padding-top: 6.2rem;
   }
 
   .kanban-board {
@@ -630,12 +637,18 @@ select {
     padding: 0.9rem 0.8rem 1.65rem;
   }
 
+  .top-bookmarks {
+    gap: 0.65rem;
+    width: 100%;
+    padding-inline: 0.5rem;
+  }
+
   .bookmark-sublabel {
     display: none;
   }
 
   .sticker-cloud {
-    opacity: 0.44 !important;
-    transform: translate(-50%, -50%) scale(0.84) !important;
+    opacity: 0.64 !important;
+    transform: translate(-50%, -50%) scale(0.82) !important;
   }
 }
