@@ -1,46 +1,47 @@
 'use client';
 
+// 산리오 공식 Giphy 스티커 — 캐릭터 단독 컷 위주로 선별
 const CHARACTERS = [
   {
-    id: 'cinnamoroll',
+    id: 'cinnamoroll-a',
     src: 'https://media.giphy.com/media/JQAxGWgPNy5uCzFkHU/giphy.gif',
     alt: '시나모롤',
-    style: { top: '200px', left: '-20px', '--rotate': '-10deg' },
-    size: 125,
+    style: { top: '180px', left: '-22px', '--rotate': '-11deg' },
+    size: 130,
   },
   {
-    id: 'pompompurin',
-    src: 'https://media.giphy.com/media/kd92rDAkBsxH3U9DgK/giphy.gif',
+    id: 'pompompurin-a',
+    src: 'https://media.giphy.com/media/kyRDodDhqXcG2ro6GV/giphy.gif',
     alt: '폼폼푸린',
-    style: { top: '510px', left: '-14px', '--rotate': '8deg' },
+    style: { top: '520px', left: '-16px', '--rotate': '9deg' },
+    size: 112,
+  },
+  {
+    id: 'mymelody-a',
+    src: 'https://media.giphy.com/media/U7VI2RFA6VcH2Gm7H9/giphy.gif',
+    alt: '마이멜로디',
+    style: { top: '160px', right: '-20px', '--rotate': '13deg' },
+    size: 120,
+  },
+  {
+    id: 'kuromi-a',
+    src: 'https://media.giphy.com/media/oVeUzLxNPkAtxJ5IZ9/giphy.gif',
+    alt: '쿠로미',
+    style: { top: '470px', right: '-14px', '--rotate': '-10deg' },
     size: 110,
   },
   {
-    id: 'mymelody',
-    src: 'https://media.giphy.com/media/U7VI2RFA6VcH2Gm7H9/giphy.gif',
-    alt: '마이멜로디',
-    style: { top: '170px', right: '-18px', '--rotate': '12deg' },
-    size: 118,
-  },
-  {
-    id: 'kuromi',
-    src: 'https://media.giphy.com/media/wEQBUOHFNmdYXK9DxY/giphy.gif',
-    alt: '쿠로미',
-    style: { top: '460px', right: '-12px', '--rotate': '-9deg' },
-    size: 108,
-  },
-  {
-    id: 'hellokitty',
-    src: 'https://media.giphy.com/media/MB0NUNjpzCYMCZejHZ/giphy.gif',
-    alt: '헬로키티',
-    style: { top: '740px', right: '-22px', '--rotate': '6deg' },
-    size: 115,
+    id: 'cinnamoroll-b',
+    src: 'https://media.giphy.com/media/lTY8pVIs76YOMDaDjY/giphy.gif',
+    alt: '시나모롤2',
+    style: { top: '760px', right: '-18px', '--rotate': '7deg' },
+    size: 116,
   },
 ];
 
 export default function DiaryDecorations() {
   return (
-    <div aria-hidden="true">
+    <div aria-hidden="true" style={{ pointerEvents: 'none' }}>
       {CHARACTERS.map(({ id, src, alt, style, size }) => (
         <div key={id} className="diary-char-wrapper" style={style}>
           <img
@@ -50,6 +51,7 @@ export default function DiaryDecorations() {
             width={size}
             height={size}
             loading="lazy"
+            draggable={false}
           />
         </div>
       ))}

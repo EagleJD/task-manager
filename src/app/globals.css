@@ -61,6 +61,8 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   padding: 3rem 1.5rem;
+  position: relative;
+  z-index: 5; /* 캐릭터 이미지(z-index:1) 위에 올라오도록 */
 }
 
 /* Kanban Board Layout */
@@ -381,71 +383,80 @@ body {
 /* ── Diary Character Decorations ── */
 .diary-char-wrapper {
   position: fixed;
-  z-index: 50;
-  transform: rotate(var(--rotate, 0deg));
-  /* Polaroid frame */
-  background: #fffdf6;
-  padding: 7px 7px 22px;
-  box-shadow:
-    2px 5px 18px rgba(0, 0, 0, 0.13),
-    0 1px 4px rgba(0, 0, 0, 0.07);
-  transition:
-    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.3s ease;
-  cursor: default;
+  z-index: 1;              /* 콘텐츠(.container z-index:5) 아래 */
+  pointer-events: none;    /* 마우스 상호작용 완전 차단 */
   user-select: none;
-}
+  cursor: default;
 
-/* Washi tape strip */
-.diary-char-wrapper::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 48px;
-  height: 16px;
-  background: repeating-linear-gradient(
-    90deg,
-    rgba(255, 179, 198, 0.65) 0px,
-    rgba(255, 222, 236, 0.5) 8px,
-    rgba(201, 184, 232, 0.5) 16px,
-    rgba(255, 240, 178, 0.5) 24px,
-    rgba(181, 224, 208, 0.5) 32px,
-    rgba(255, 179, 198, 0.65) 40px
+  transform: rotate(var(--rotate, 0deg));
+
+  /* 낡은 종이 배경 */
+  background: #e8d8b8;
+  padding: 5px;
+
+  /* 찢긴 종이 테두리 — 4면 모두 불규칙 폴리곤 */
+  clip-path: polygon(
+    /* 상단 찢긴 면 */
+    0% 5%,  3% 1%,  6% 4%,  10% 0%,  14% 3%,  18% 1%,  22% 5%,
+    26% 0%,  30% 3%,  34% 1%,  38% 4%,  42% 0%,  46% 3%,
+    50% 1%,  54% 5%,  58% 0%,  62% 3%,  66% 1%,  70% 4%,
+    74% 0%,  78% 3%,  82% 1%,  86% 5%,  90% 0%,  94% 3%,
+    97% 1%,  100% 4%,
+    /* 오른쪽 찢긴 면 */
+    98% 9%,  100% 16%,  97% 23%,  99% 30%,  96% 37%,
+    98% 44%,  95% 51%,  97% 58%,  94% 65%,  96% 72%,
+    93% 79%,  95% 86%,  92% 93%,  100% 100%,
+    /* 하단 찢긴 면 */
+    94% 97%,  90% 100%,  86% 97%,  82% 100%,  78% 97%,  74% 100%,
+    70% 97%,  66% 100%,  62% 97%,  58% 100%,  54% 97%,  50% 100%,
+    46% 97%,  42% 100%,  38% 97%,  34% 100%,  30% 97%,  26% 100%,
+    22% 97%,  18% 100%,  14% 97%,  10% 100%,  6% 97%,  2% 100%,
+    0% 97%,
+    /* 왼쪽 찢긴 면 */
+    2% 91%,  0% 84%,  3% 77%,  0% 70%,  2% 63%,  0% 56%,
+    3% 49%,  0% 42%,  2% 35%,  0% 28%,  3% 21%,  0% 14%,  2% 7%
   );
-  border-radius: 3px;
-  opacity: 0.9;
+
+  /* drop-shadow 는 clip-path 이후 적용 → 찢긴 외곽을 따라 그림자 생성 */
+  filter: drop-shadow(2px 3px 9px rgba(0, 0, 0, 0.28));
 }
 
-/* Paper grain overlay */
+/* 종이 결 + 나무 질감 grain 오버레이 */
 .diary-char-wrapper::after {
   content: '';
   position: absolute;
-  inset: 7px 7px 22px;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+  inset: 0;
+  /* fractalNoise — 높은 강도로 종이/나무질감 표현 */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.18'/%3E%3C/svg%3E"),
+    /* 나뭇결 느낌의 미세 선 */
+    repeating-linear-gradient(
+      82deg,
+      transparent 0px,
+      rgba(100, 60, 20, 0.04) 1px,
+      transparent 2px,
+      transparent 7px
+    );
   pointer-events: none;
-  mix-blend-mode: overlay;
+  mix-blend-mode: multiply;
   z-index: 5;
 }
 
-.diary-char-wrapper:hover {
-  transform: rotate(0deg) scale(1.12);
-  box-shadow:
-    4px 10px 28px rgba(0, 0, 0, 0.18),
-    0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 200;
-}
-
-/* Paper texture filter on image */
+/* 강한 종이 질감 필터 */
 .diary-char-img {
   display: block;
   width: 100%;
   height: auto;
-  filter: sepia(14%) contrast(91%) brightness(107%) saturate(86%);
+  position: relative;
+  z-index: 1;
+  filter:
+    sepia(48%)
+    contrast(82%)
+    brightness(97%)
+    saturate(65%)
+    hue-rotate(4deg);
 }
 
-/* Hide on smaller screens to avoid overlap */
+/* 좁은 화면에서 숨김 */
 @media (max-width: 1200px) {
   .diary-char-wrapper { display: none; }
 }
