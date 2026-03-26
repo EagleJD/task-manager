@@ -3,56 +3,109 @@
 import Image from 'next/image';
 
 const SOURCES = [
-  'https://media.giphy.com/media/oVeUzLxNPkAtxJ5IZ9/giphy_s.gif',
-  'https://media.giphy.com/media/vWogB2TzWRruIQzRBt/giphy_s.gif',
-  'https://media.giphy.com/media/KERiMXasn55GDu9AYI/giphy_s.gif',
-  'https://media.giphy.com/media/JNxq0xOWfidCDzqUH3/giphy_s.gif',
-  'https://media.giphy.com/media/l2FSi4zPU5dnLyd7Q4/giphy_s.gif',
-  'https://media.giphy.com/media/dCRVRbdbZUlNt1sRPd/giphy_s.gif',
-  'https://media.giphy.com/media/Qtvvgwbl1svKYcUGIT/giphy_s.gif',
+  '/kuromi-stickers/kuromi-01-01.png',
+  '/kuromi-stickers/kuromi-01-01-glow.png',
+  '/kuromi-stickers/kuromi-01-01-mirror.png',
+  '/kuromi-stickers/kuromi-01-01-soft.png',
+  '/kuromi-stickers/kuromi-02-01.png',
+  '/kuromi-stickers/kuromi-02-01-glow.png',
+  '/kuromi-stickers/kuromi-02-01-mirror.png',
+  '/kuromi-stickers/kuromi-02-01-soft.png',
+  '/kuromi-stickers/kuromi-03-01.png',
+  '/kuromi-stickers/kuromi-03-01-glow.png',
+  '/kuromi-stickers/kuromi-03-01-mirror.png',
+  '/kuromi-stickers/kuromi-03-01-soft.png',
+  '/kuromi-stickers/kuromi-04-01.png',
+  '/kuromi-stickers/kuromi-04-01-glow.png',
+  '/kuromi-stickers/kuromi-04-01-mirror.png',
+  '/kuromi-stickers/kuromi-04-01-soft.png',
+  '/kuromi-stickers/kuromi-05-01.png',
+  '/kuromi-stickers/kuromi-05-01-glow.png',
+  '/kuromi-stickers/kuromi-05-01-mirror.png',
+  '/kuromi-stickers/kuromi-05-01-soft.png',
+  '/kuromi-stickers/kuromi-06-01.png',
+  '/kuromi-stickers/kuromi-06-01-glow.png',
+  '/kuromi-stickers/kuromi-06-01-mirror.png',
+  '/kuromi-stickers/kuromi-06-01-soft.png',
+  '/kuromi-stickers/kuromi-07-01.png',
+  '/kuromi-stickers/kuromi-07-01-glow.png',
+  '/kuromi-stickers/kuromi-07-01-mirror.png',
+  '/kuromi-stickers/kuromi-07-01-soft.png',
 ];
 
-const FILTERS = [
-  'saturate(1.05)',
-  'saturate(0.95) hue-rotate(-6deg)',
-  'brightness(1.03)',
-  'contrast(1.04)',
+const CLUSTERS = [
+  { x: 7, y: 6, count: 14, spreadX: 10, spreadY: 9, sizeMin: 92, sizeMax: 170, opacity: [0.82, 0.98] },
+  { x: 24, y: 8, count: 12, spreadX: 12, spreadY: 9, sizeMin: 78, sizeMax: 148, opacity: [0.58, 0.88] },
+  { x: 46, y: 9, count: 12, spreadX: 13, spreadY: 10, sizeMin: 78, sizeMax: 144, opacity: [0.52, 0.82] },
+  { x: 70, y: 7, count: 12, spreadX: 13, spreadY: 10, sizeMin: 82, sizeMax: 150, opacity: [0.58, 0.86] },
+  { x: 92, y: 8, count: 14, spreadX: 10, spreadY: 9, sizeMin: 94, sizeMax: 172, opacity: [0.82, 0.98] },
+  { x: 13, y: 26, count: 10, spreadX: 11, spreadY: 10, sizeMin: 76, sizeMax: 142, opacity: [0.6, 0.9] },
+  { x: 35, y: 25, count: 12, spreadX: 13, spreadY: 10, sizeMin: 74, sizeMax: 132, opacity: [0.46, 0.78] },
+  { x: 56, y: 28, count: 13, spreadX: 13, spreadY: 11, sizeMin: 74, sizeMax: 136, opacity: [0.44, 0.76] },
+  { x: 78, y: 26, count: 11, spreadX: 12, spreadY: 10, sizeMin: 76, sizeMax: 140, opacity: [0.58, 0.86] },
+  { x: 6, y: 48, count: 14, spreadX: 10, spreadY: 11, sizeMin: 88, sizeMax: 166, opacity: [0.76, 0.95] },
+  { x: 28, y: 48, count: 11, spreadX: 12, spreadY: 10, sizeMin: 76, sizeMax: 136, opacity: [0.48, 0.76] },
+  { x: 50, y: 50, count: 12, spreadX: 12, spreadY: 11, sizeMin: 76, sizeMax: 136, opacity: [0.4, 0.68] },
+  { x: 72, y: 48, count: 11, spreadX: 12, spreadY: 10, sizeMin: 76, sizeMax: 136, opacity: [0.5, 0.8] },
+  { x: 94, y: 48, count: 14, spreadX: 10, spreadY: 11, sizeMin: 88, sizeMax: 166, opacity: [0.76, 0.95] },
+  { x: 16, y: 72, count: 11, spreadX: 11, spreadY: 11, sizeMin: 76, sizeMax: 142, opacity: [0.58, 0.88] },
+  { x: 39, y: 73, count: 12, spreadX: 12, spreadY: 11, sizeMin: 76, sizeMax: 138, opacity: [0.46, 0.74] },
+  { x: 61, y: 74, count: 12, spreadX: 12, spreadY: 11, sizeMin: 76, sizeMax: 138, opacity: [0.44, 0.72] },
+  { x: 84, y: 72, count: 11, spreadX: 11, spreadY: 11, sizeMin: 78, sizeMax: 144, opacity: [0.58, 0.88] },
+  { x: 8, y: 92, count: 14, spreadX: 10, spreadY: 8, sizeMin: 96, sizeMax: 176, opacity: [0.82, 0.98] },
+  { x: 30, y: 92, count: 11, spreadX: 12, spreadY: 8, sizeMin: 80, sizeMax: 146, opacity: [0.54, 0.82] },
+  { x: 52, y: 93, count: 12, spreadX: 12, spreadY: 8, sizeMin: 78, sizeMax: 142, opacity: [0.46, 0.74] },
+  { x: 74, y: 92, count: 11, spreadX: 12, spreadY: 8, sizeMin: 80, sizeMax: 146, opacity: [0.54, 0.82] },
+  { x: 94, y: 92, count: 14, spreadX: 10, spreadY: 8, sizeMin: 98, sizeMax: 178, opacity: [0.82, 0.98] },
 ];
 
-const EDGE_STICKERS = [
-  { src: 0, size: 220, top: '-1.8%', left: '-3%', rotate: '-18deg', opacity: 0.95 },
-  { src: 1, size: 180, top: '1.5%', right: '-1.5%', rotate: '14deg', opacity: 0.9 },
-  { src: 2, size: 180, top: '16%', left: '-3.2%', rotate: '-16deg', opacity: 0.82 },
-  { src: 3, size: 168, top: '19%', right: '-2.5%', rotate: '18deg', opacity: 0.8 },
-  { src: 4, size: 170, top: '39%', left: '-2.5%', rotate: '-22deg', opacity: 0.84 },
-  { src: 5, size: 170, top: '42%', right: '-2.2%', rotate: '21deg', opacity: 0.8 },
-  { src: 6, size: 188, top: '66%', left: '-3%', rotate: '16deg', opacity: 0.84 },
-  { src: 0, size: 186, top: '71%', right: '-2.5%', rotate: '-14deg', opacity: 0.82 },
-  { src: 3, size: 190, bottom: '-2%', left: '-2.5%', rotate: '12deg', opacity: 0.85 },
-  { src: 4, size: 205, bottom: '-2.2%', right: '-3%', rotate: '-17deg', opacity: 0.88 },
-];
+function createRandom(seed) {
+  let state = seed % 2147483647;
+  if (state <= 0) state += 2147483646;
 
-const GRID_STICKERS = Array.from({ length: 48 }, (_, index) => {
-  const row = Math.floor(index / 6);
-  const col = index % 6;
-  const left = 8 + col * 16 + [0, -2.5, 2, -1, 1.5, -2][col];
-  const top = 6 + row * 12.5 + [0, 1.8, -1.2, 1.2, -1.6, 1, -0.8, 1.6][row];
-  const edgeFactor = col === 0 || col === 5 ? 1 : col === 1 || col === 4 ? 0.72 : 0.58;
-  const size = 82 + ((row + col) % 4) * 12 + (col === 0 || col === 5 ? 18 : 0);
-  const opacity = 0.2 + edgeFactor * 0.16;
-
-  return {
-    src: (index + row) % SOURCES.length,
-    size,
-    top: `${top}%`,
-    left: `${left}%`,
-    rotate: `${[-18, -10, -4, 8, 14, 20][(index + col) % 6]}deg`,
-    opacity,
-    filter: FILTERS[index % FILTERS.length],
+  return () => {
+    state = (state * 16807) % 2147483647;
+    return (state - 1) / 2147483646;
   };
-});
+}
 
-const STICKERS = [...EDGE_STICKERS, ...GRID_STICKERS];
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function buildStickers() {
+  const placements = [];
+
+  CLUSTERS.forEach((cluster, clusterIndex) => {
+    const random = createRandom(clusterIndex + 11);
+
+    for (let i = 0; i < cluster.count; i += 1) {
+      const size =
+        cluster.sizeMin + Math.round((cluster.sizeMax - cluster.sizeMin) * random());
+      const offsetX = (random() - 0.5) * 2 * cluster.spreadX;
+      const offsetY = (random() - 0.5) * 2 * cluster.spreadY;
+      const top = clamp(cluster.y + offsetY, -3, 101);
+      const left = clamp(cluster.x + offsetX, -4, 104);
+      const opacity =
+        cluster.opacity[0] +
+        (cluster.opacity[1] - cluster.opacity[0]) * random();
+
+      placements.push({
+        src: SOURCES[(clusterIndex * 7 + i * 3 + Math.floor(random() * SOURCES.length)) % SOURCES.length],
+        size,
+        top: `${top}%`,
+        left: `${left}%`,
+        rotation: `${Math.round((random() - 0.5) * 50)}deg`,
+        opacity: Number(opacity.toFixed(3)),
+        zIndex: 1 + Math.floor(random() * 6),
+      });
+    }
+  });
+
+  return placements;
+}
+
+const STICKERS = buildStickers();
 
 export default function KuromiStickers() {
   return (
@@ -82,40 +135,34 @@ export default function KuromiStickers() {
         </defs>
       </svg>
 
-      {STICKERS.map((sticker, index) => {
-        const src = SOURCES[sticker.src];
-
-        return (
-          <div
-            key={`${src}-${index}`}
-            className="sticker-cloud"
+      {STICKERS.map((sticker, index) => (
+        <div
+          key={`${sticker.src}-${index}`}
+          className="sticker-cloud"
+          style={{
+            top: sticker.top,
+            left: sticker.left,
+            opacity: sticker.opacity,
+            zIndex: sticker.zIndex,
+            transform: `translate(-50%, -50%) rotate(${sticker.rotation})`,
+          }}
+        >
+          <Image
+            src={sticker.src}
+            alt=""
+            width={sticker.size}
+            height={sticker.size}
+            sizes={`${sticker.size}px`}
+            draggable={false}
             style={{
-              top: sticker.top,
-              right: sticker.right,
-              bottom: sticker.bottom,
-              left: sticker.left,
-              opacity: sticker.opacity,
-              transform: `rotate(${sticker.rotate})`,
+              display: 'block',
+              width: sticker.size,
+              height: sticker.size,
+              filter: 'url(#ks-white) drop-shadow(0 10px 18px rgba(78, 46, 96, 0.18))',
             }}
-          >
-            <Image
-              src={src}
-              alt=""
-              width={sticker.size}
-              height={sticker.size}
-              sizes={`${sticker.size}px`}
-              unoptimized
-              draggable={false}
-              style={{
-                display: 'block',
-                width: sticker.size,
-                height: sticker.size,
-                filter: `url(#ks-white) drop-shadow(2px 4px 8px rgba(0,0,0,0.15)) ${sticker.filter ?? ''}`.trim(),
-              }}
-            />
-          </div>
-        );
-      })}
+          />
+        </div>
+      ))}
     </div>
   );
 }

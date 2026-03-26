@@ -3,13 +3,13 @@ import KuromiStickers from '@/components/KuromiStickers';
 
 export const metadata = {
   title: 'My Task Diary',
-  description: '쿠로미 스티커로 꾸민 다이어리 스타일 태스크 매니저',
+  description: '쿠로미 스티커가 가득 깔린 다이어리 스타일 태스크 매니저',
 };
 
 const bookmarks = [
-  { label: 'Today', colorClass: 'pink' },
-  { label: 'Work', colorClass: 'blue' },
-  { label: 'Focus', colorClass: 'yellow' },
+  { label: 'TODAY', sublabel: 'March Notes', colorClass: 'pink' },
+  { label: 'WORK', sublabel: 'Priority Set', colorClass: 'blue' },
+  { label: 'FOCUS', sublabel: 'Deep Session', colorClass: 'yellow' },
 ];
 
 export default function Home() {
@@ -29,9 +29,12 @@ export default function Home() {
 
           <div className="bookmark-strip" aria-hidden="true">
             {bookmarks.map((bookmark) => (
-              <span key={bookmark.label} className={`bookmark ${bookmark.colorClass}`}>
-                {bookmark.label}
-              </span>
+              <div key={bookmark.label} className={`bookmark ${bookmark.colorClass}`}>
+                <span className="bookmark-cap"></span>
+                <span className="bookmark-eyelet"></span>
+                <span className="bookmark-label">{bookmark.label}</span>
+                <span className="bookmark-sublabel">{bookmark.sublabel}</span>
+              </div>
             ))}
           </div>
 
@@ -41,7 +44,7 @@ export default function Home() {
           <p className="hero-kicker">Diary board for the day</p>
           <h1>My Task Diary</h1>
           <p className="hero-description">
-            빼곡한 쿠로미 스티커 배경 위에 오늘의 할 일과 마감 시간을 정리해보세요.
+            빈틈 없이 깔린 쿠로미 스티커 사이에서 오늘의 태스크를 다이어리처럼 정리해보세요.
           </p>
         </section>
 
