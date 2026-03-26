@@ -131,9 +131,89 @@ export default function TaskManager() {
     return new Date(date.getTime() - offset).toISOString().slice(0, 16);
   };
 
+  // Hybrid Sorting Logic
+  const sortedTasks = [...tasks].sort((a, b) => {
+    const aHasDue = !!a.due_date;
+    const bHasDue = !!b.due_date;
+
+    if (aHasDue && bHasDue) {
+      return new Date(a.due_date) - new Date(b.due_date);
+    } else if (aHasDue && !bHasDue) {
+      return -1;
+    } else if (!aHasDue && bHasDue) {
+      return 1;
+    } else {
+      return new Date(b.created_at) - new Date(a.created_at);
+    }
+  });
+
+  const highTasks = sortedTasks.filter(t => t.priority === 'high');
+  const mediumTasks = sortedTasks.filter(t => t.priority === 'medium');
+  const lowTasks = sortedTasks.filter(t => t.priority === 'low');
+
+  const renderTaskItem = (task, idx) => (
+    <div 
+      key={task.id} 
+      className={`pinned-panel task-item animate-item ${task.completed ? 'completed' : ''}`}
+      style={{ animationDelay: `${Math.min(idx * 0.05, 0.5)}s`, borderLeftColor: task.priority === 'high' ? 'var(--danger)' : task.priority === 'low' ? 'var(--success)' : 'var(--pastel-blue)', marginBottom: 0 }}
+    >
+      <div className="pin yellow" style={{ top: '-8px', left: '15px' }}></div>
+      <div className="pin pink" style={{ top: '-8px', right: '15px' }}></div>
+
+      <div style={{ display: 'flex', alignItems: 'flex-start', width: '100%', marginTop: '0.5rem' }}>
+        <div 
+          className={`status-circle ${task.completed ? 'active' : ''}`} 
+          onClick={() => toggleTask(task.id, task.completed)}
+          style={{ marginTop: '0.2rem' }}
+        >
+          {task.completed && <Check size={14} color="#fff" strokeWidth={3} />}
+        </div>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, marginLeft: '1rem' }}>
+          <span className="task-text">{task.text}</span>
+          
+          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            <span className="badge category" style={{ fontSize: '0.7rem', padding: '0.2rem 0.4rem' }}>
+              {task.category}
+            </span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.4rem', marginLeft: 'auto' }}>
+              {editingDueDateId === task.id ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: '#111116', padding: '0.2rem 0.4rem', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
+                  <input type="datetime-local" style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', outline: 'none', fontSize: '0.75rem' }} value={editingDueDateVal} onChange={(e) => setEditingDueDateVal(e.target.value)} autoFocus />
+                  <button onClick={(e) => { e.stopPropagation(); updateDueDate(task.id, editingDueDateVal || null); }} style={{ background: 'rgba(147, 197, 253, 0.1)', color: 'var(--pastel-blue)', border: '1px solid rgba(147, 197, 253, 0.3)', borderRadius: '4px', padding: '0.2rem 0.4rem', cursor: 'pointer', fontSize: '0.7rem', fontWeight: 'bold' }}>Save</button>
+                  <button onClick={(e) => { e.stopPropagation(); setEditingDueDateId(null); setEditingDueDateVal(''); }} style={{ background: 'transparent', color: 'var(--danger)', border: 'none', cursor: 'pointer', display: 'flex' }}><X size={12} /></button>
+                </div>
+              ) : (
+                <div 
+                  onClick={(e) => { e.stopPropagation(); setEditingDueDateId(task.id); setEditingDueDateVal(task.due_date ? formatDatetimeForInput(task.due_date) : ''); }} 
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', padding: '0.2rem 0.4rem', borderRadius: '6px', background: task.due_date ? (new Date(task.due_date) < new Date() ? 'rgba(253, 164, 175, 0.15)' : 'rgba(147, 197, 253, 0.1)') : 'transparent', color: task.due_date ? (new Date(task.due_date) < new Date() ? '#fecdd3' : '#bfdbfe') : 'var(--text-muted)', border: '1px solid transparent', transition: 'all 0.2s' }}
+                  title="Click to edit due date"
+                  onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                  onMouseOut={(e) => e.currentTarget.style.background = task.due_date ? (new Date(task.due_date) < new Date() ? 'rgba(253, 164, 175, 0.1)' : 'rgba(147, 197, 253, 0.05)') : 'transparent'}
+                >
+                  <Calendar size={12} />
+                  <span>{task.due_date ? `${new Date(task.due_date).toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}` : '기한 설정'}</span>
+                </div>
+              )}
+            </span>
+          </div>
+        </div>
+
+        <button 
+          className="btn-icon danger" 
+          onClick={() => deleteTask(task.id)}
+          aria-label="Delete Task"
+          style={{ marginLeft: '0.5rem', padding: '0.4rem' }}
+        >
+          <Trash2 size={16} />
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div>
-      <form onSubmit={addTask} className="pinned-panel" style={{ padding: '2.5rem', marginBottom: '3.5rem' }}>
+      <form onSubmit={addTask} className="pinned-panel" style={{ padding: '2.5rem', marginBottom: '3.5rem', maxWidth: '800px', margin: '0 auto 3.5rem auto' }}>
         <div className="pin blue" style={{ top: '-8px', left: '-8px' }}></div>
         <div className="pin purple" style={{ top: '-8px', right: '-8px' }}></div>
         <div className="pin yellow" style={{ bottom: '-8px', left: '-8px' }}></div>
@@ -187,80 +267,31 @@ export default function TaskManager() {
         </div>
       </form>
 
-      <div className="tasks-container">
-        {tasks.length === 0 ? (
-          <div className="pinned-panel animate-in" style={{ padding: '5rem 2rem', textAlign: 'center' }}>
-            <div className="pin blue" style={{ top: '-8px', left: '50%', transform: 'translateX(-50%)' }}></div>
-            <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>📝</div>
-            <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>No tasks found</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>Pin your first task to the board.</p>
+      {tasks.length === 0 ? (
+        <div className="pinned-panel animate-in" style={{ padding: '5rem 2rem', textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
+          <div className="pin blue" style={{ top: '-8px', left: '50%', transform: 'translateX(-50%)' }}></div>
+          <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>📝</div>
+          <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>No tasks found</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>Pin your first task to the board.</p>
+        </div>
+      ) : (
+        <div className="kanban-board">
+          <div className="kanban-col">
+            <div className="col-header" style={{ color: 'var(--danger)' }}>🔥 High <span>{highTasks.length}</span></div>
+            {highTasks.map((task, idx) => renderTaskItem(task, idx))}
           </div>
-        ) : (
-          tasks.map((task, idx) => (
-            <div 
-              key={task.id} 
-              className={`pinned-panel task-item animate-item ${task.completed ? 'completed' : ''}`}
-              style={{ animationDelay: `${Math.min(idx * 0.05, 0.5)}s`, borderLeftColor: task.priority === 'high' ? 'var(--danger)' : task.priority === 'low' ? 'var(--success)' : 'var(--pastel-blue)' }}
-            >
-              <div className="pin yellow" style={{ top: '-8px', left: '15px' }}></div>
-              <div className="pin pink" style={{ top: '-8px', right: '15px' }}></div>
 
-              <div style={{ display: 'flex', alignItems: 'center', width: '100%', marginTop: '0.5rem' }}>
-                <div 
-                  className={`status-circle ${task.completed ? 'active' : ''}`} 
-                  onClick={() => toggleTask(task.id, task.completed)}
-                >
-                  {task.completed && <Check size={14} color="#fff" strokeWidth={3} />}
-                </div>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', flex: 1, marginLeft: '1.25rem' }}>
-                  <span className="task-text">{task.text}</span>
-                  
-                  <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <span className="badge category">
-                      {task.category}
-                    </span>
-                    <span className={`badge priority-${task.priority}`}>
-                      {task.priority === 'high' ? 'High' : task.priority === 'medium' ? 'Medium' : 'Low'}
-                    </span>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500, marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      {editingDueDateId === task.id ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: '#111116', padding: '0.2rem 0.4rem', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
-                          <input type="datetime-local" style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', outline: 'none', fontSize: '0.8rem' }} value={editingDueDateVal} onChange={(e) => setEditingDueDateVal(e.target.value)} autoFocus />
-                          <button onClick={(e) => { e.stopPropagation(); updateDueDate(task.id, editingDueDateVal || null); }} style={{ background: 'rgba(147, 197, 253, 0.1)', color: 'var(--pastel-blue)', border: '1px solid rgba(147, 197, 253, 0.3)', borderRadius: '4px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold' }}>Save</button>
-                          <button onClick={(e) => { e.stopPropagation(); setEditingDueDateId(null); setEditingDueDateVal(''); }} style={{ background: 'transparent', color: 'var(--danger)', border: 'none', cursor: 'pointer', display: 'flex' }}><X size={14} /></button>
-                        </div>
-                      ) : (
-                        <div 
-                          onClick={(e) => { e.stopPropagation(); setEditingDueDateId(task.id); setEditingDueDateVal(task.due_date ? formatDatetimeForInput(task.due_date) : ''); }} 
-                          style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', padding: '0.2rem 0.5rem', borderRadius: '6px', background: task.due_date ? (new Date(task.due_date) < new Date() ? 'rgba(253, 164, 175, 0.15)' : 'rgba(147, 197, 253, 0.1)') : 'transparent', color: task.due_date ? (new Date(task.due_date) < new Date() ? '#fecdd3' : '#bfdbfe') : 'var(--text-muted)', border: '1px solid transparent', transition: 'all 0.2s' }}
-                          title="Click to edit due date"
-                          onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                          onMouseOut={(e) => e.currentTarget.style.background = task.due_date ? (new Date(task.due_date) < new Date() ? 'rgba(253, 164, 175, 0.1)' : 'rgba(147, 197, 253, 0.05)') : 'transparent'}
-                        >
-                          <Calendar size={14} />
-                          <span>{task.due_date ? `${new Date(task.due_date).toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} 마감` : '기한 지정'}</span>
-                        </div>
-                      )}
-                      <span style={{ color: 'var(--border-color)', margin: '0 0.2rem' }}>|</span>
-                      <span>작성: {new Date(task.created_at || Date.now()).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}</span>
-                    </span>
-                  </div>
-                </div>
+          <div className="kanban-col">
+            <div className="col-header" style={{ color: 'var(--pastel-purple)' }}>⭐ Medium <span>{mediumTasks.length}</span></div>
+            {mediumTasks.map((task, idx) => renderTaskItem(task, idx))}
+          </div>
 
-                <button 
-                  className="btn-icon danger" 
-                  onClick={() => deleteTask(task.id)}
-                  aria-label="Delete Task"
-                  style={{ marginLeft: '1rem' }}
-                >
-                  <Trash2 size={20} />
-                </button>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+          <div className="kanban-col">
+            <div className="col-header" style={{ color: 'var(--success)' }}>🟢 Low <span>{lowTasks.length}</span></div>
+            {lowTasks.map((task, idx) => renderTaskItem(task, idx))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
