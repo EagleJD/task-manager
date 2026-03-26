@@ -118,7 +118,7 @@ export default function TaskManager() {
     return (
       <div style={{ textAlign: 'center', padding: '5rem', color: 'var(--text-muted)' }}>
         <Loader2 size={40} style={{ margin: '0 auto', animation: 'spin 1s linear infinite', color: 'var(--pastel-pink)' }} />
-        <p style={{ marginTop: '1.5rem', fontSize: '1.1rem', fontWeight: 500 }}>読み込み中... 🌸</p>
+        <p style={{ marginTop: '1.5rem', fontSize: '1.1rem', fontWeight: 500 }}>불러오는 중... 🌸</p>
         <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -180,7 +180,7 @@ export default function TaskManager() {
               {editingDueDateId === task.id ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: '#fff9fb', padding: '0.2rem 0.4rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                   <input type="datetime-local" style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', outline: 'none', fontSize: '0.75rem', colorScheme: 'light' }} value={editingDueDateVal} onChange={(e) => setEditingDueDateVal(e.target.value)} autoFocus />
-                  <button onClick={(e) => { e.stopPropagation(); updateDueDate(task.id, editingDueDateVal || null); }} style={{ background: 'rgba(255, 179, 198, 0.15)', color: '#c05888', border: '1px solid rgba(255, 179, 198, 0.4)', borderRadius: '6px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '0.7rem', fontWeight: 'bold', fontFamily: 'inherit' }}>保存 ✓</button>
+                  <button onClick={(e) => { e.stopPropagation(); updateDueDate(task.id, editingDueDateVal || null); }} style={{ background: 'rgba(255, 179, 198, 0.15)', color: '#c05888', border: '1px solid rgba(255, 179, 198, 0.4)', borderRadius: '6px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '0.7rem', fontWeight: 'bold', fontFamily: 'inherit' }}>저장 ✓</button>
                   <button onClick={(e) => { e.stopPropagation(); setEditingDueDateId(null); setEditingDueDateVal(''); }} style={{ background: 'transparent', color: 'var(--danger)', border: 'none', cursor: 'pointer', display: 'flex' }}><X size={12} /></button>
                 </div>
               ) : (
@@ -192,7 +192,7 @@ export default function TaskManager() {
                   onMouseOut={(e) => e.currentTarget.style.background = task.due_date ? (new Date(task.due_date) < new Date() ? 'rgba(255, 112, 150, 0.1)' : 'rgba(255, 179, 198, 0.12)') : 'transparent'}
                 >
                   <Calendar size={12} />
-                  <span>{task.due_date ? `${new Date(task.due_date).toLocaleString('ja-JP', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}` : '期限を設定 🗓️'}</span>
+                  <span>{task.due_date ? `${new Date(task.due_date).toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}` : '기한 설정 🗓️'}</span>
                 </div>
               )}
             </span>
@@ -221,7 +221,7 @@ export default function TaskManager() {
 
         {errorMsg && (
           <div style={{ padding: '1rem', marginBottom: '1.5rem', background: 'rgba(255, 112, 150, 0.08)', color: 'var(--danger)', border: '1.5px solid rgba(255, 112, 150, 0.25)', borderRadius: '12px', fontSize: '0.95rem' }}>
-            <strong>ごめんね 🙈</strong>　{errorMsg}
+            <strong>앗, 오류가 났어요 🙈</strong>　{errorMsg}
           </div>
         )}
         
@@ -229,7 +229,7 @@ export default function TaskManager() {
           <input
             type="text"
             className="input-field"
-            placeholder="今日やること... 🌸"
+            placeholder="오늘 할 일... 🌸"
             value={text}
             onChange={e => setText(e.target.value)}
             disabled={submitting}
@@ -246,23 +246,23 @@ export default function TaskManager() {
             className="input-field select-field" style={{ flex: 1, minWidth: '90px', cursor: 'pointer' }}
             value={category} onChange={e => setCategory(e.target.value)}
           >
-            <option value="Work">💼 お仕事</option>
-            <option value="Personal">🌷 プライベート</option>
-            <option value="Study">📚 勉強</option>
+            <option value="Work">💼 업무</option>
+            <option value="Personal">🌷 개인</option>
+            <option value="Study">📚 공부</option>
           </select>
           
           <select 
             className="input-field select-field" style={{ flex: 1, minWidth: '90px', cursor: 'pointer' }}
             value={priority} onChange={e => setPriority(e.target.value)}
           >
-            <option value="low">🍀 のんびり</option>
-            <option value="medium">✨ ふつう</option>
-            <option value="high">🌸 急いで！</option>
+            <option value="low">🍀 여유</option>
+            <option value="medium">✨ 보통</option>
+            <option value="high">🌸 급해요!</option>
           </select>
           
           <button type="submit" className="btn-primary" disabled={!text.trim() || submitting} style={{ flex: 1, minWidth: '100px' }}>
             {submitting ? <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> : <Plus size={20} />}
-            追加する ✨
+            추가하기 ✨
           </button>
         </div>
       </form>
@@ -271,23 +271,23 @@ export default function TaskManager() {
         <div className="pinned-panel animate-in" style={{ padding: '5rem 2rem', textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
           <div className="pin blue" style={{ top: '-8px', left: '50%', transform: 'translateX(-50%)' }}></div>
           <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>🌸</div>
-          <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>まだタスクなし (´･ω･`)</h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem' }}>最初のタスクを追加してね！✨</p>
+          <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>아직 할 일이 없어요 (´･ω･`)</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem' }}>첫 번째 할 일을 추가해봐요! ✨</p>
         </div>
       ) : (
         <div className="kanban-board">
           <div className="kanban-col-wrapper">
-            <div className="col-header" style={{ color: 'var(--danger)' }}>🌸 急いで！<span>{highTasks.length}</span></div>
+            <div className="col-header" style={{ color: 'var(--danger)' }}>🌸 급해요! <span>{highTasks.length}</span></div>
             <div className="kanban-col">{highTasks.map((task, idx) => renderTaskItem(task, idx))}</div>
           </div>
 
           <div className="kanban-col-wrapper">
-            <div className="col-header" style={{ color: '#9070c8' }}>✨ ふつう <span>{mediumTasks.length}</span></div>
+            <div className="col-header" style={{ color: '#9070c8' }}>✨ 보통 <span>{mediumTasks.length}</span></div>
             <div className="kanban-col">{mediumTasks.map((task, idx) => renderTaskItem(task, idx))}</div>
           </div>
 
           <div className="kanban-col-wrapper">
-            <div className="col-header" style={{ color: 'var(--success)' }}>🍀 のんびり <span>{lowTasks.length}</span></div>
+            <div className="col-header" style={{ color: 'var(--success)' }}>🍀 여유 <span>{lowTasks.length}</span></div>
             <div className="kanban-col">{lowTasks.map((task, idx) => renderTaskItem(task, idx))}</div>
           </div>
         </div>

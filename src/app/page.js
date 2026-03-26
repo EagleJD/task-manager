@@ -16,7 +16,7 @@ export default function Home() {
           🌸 My Task Diary
         </h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '1rem', fontWeight: 500, letterSpacing: '0.1em' }}>
-          ✨ 今日もいっしょにがんばろ ✨
+          ✨ 오늘도 같이 힘내보자 ✨
         </p>
       </header>
       <main>
