@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=M+PLUS+Rounded+1c:wght@300;400;500;700;800&display=swap');
 
 :root {
   --bg-color: #fff5f8;
@@ -29,7 +29,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   padding-bottom: 5rem;
-  font-family: 'M PLUS Rounded 1c', sans-serif;
+  font-family: 'Gaegu', 'M PLUS Rounded 1c', sans-serif;
   color: var(--text-main);
   background:
     radial-gradient(circle at top, rgba(255, 255, 255, 0.96), transparent 26%),
@@ -109,11 +109,10 @@ select {
   z-index: 0;
   border-radius: 28px;
   background:
-    radial-gradient(circle at 50% 42%, rgba(125, 98, 114, 0.18), rgba(125, 98, 114, 0.06) 30%, transparent 62%),
     radial-gradient(circle at 8% 12%, rgba(255, 255, 255, 0.7) 0 1.5px, transparent 1.8px) 0 0 / 24px 24px,
     radial-gradient(circle at 74% 36%, rgba(229, 189, 203, 0.24) 0 1.2px, transparent 1.5px) 0 0 / 19px 19px,
-    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0));
-  opacity: 0.92;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+  opacity: 0.85;
   pointer-events: none;
 }
 
@@ -131,17 +130,6 @@ select {
   z-index: 1;
   min-height: 100%;
   overflow: hidden;
-  pointer-events: none;
-  filter: saturate(0.58) brightness(0.88) contrast(0.94);
-}
-
-.sticker-field::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 50% 40%, rgba(94, 74, 86, 0.16), transparent 42%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
   pointer-events: none;
 }
 
@@ -314,26 +302,63 @@ select {
 
 .hero-kicker {
   margin-bottom: 0.8rem;
-  font-size: 0.84rem;
+  display: inline-block;
+  padding-inline: 0.95rem;
+  font-family: 'Gaegu', 'M PLUS Rounded 1c', sans-serif;
+  font-size: 1.1rem;
   font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--text-muted);
+  position: relative;
 }
 
-.hero-diary h1 {
-  margin-bottom: 0.75rem;
+.hero-kicker::before,
+.hero-kicker::after {
+  content: '★';
+  position: absolute;
+  top: 50%;
+  font-size: 0.8rem;
+  color: rgba(255, 137, 178, 0.8);
+  transform: translateY(-50%);
+}
+
+.hero-kicker::before {
+  left: -0.1rem;
+}
+
+.hero-kicker::after {
+  right: -0.1rem;
+}
+
+.hero-title {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 0.9rem;
+  padding: 0 1rem 0.7rem;
+  font-family: 'Gaegu', 'M PLUS Rounded 1c', sans-serif;
   font-size: clamp(2.2rem, 5vw, 3.5rem);
   line-height: 1.05;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.01em;
+  background-image: linear-gradient(transparent 78%, rgba(255, 216, 129, 0.85) 78%, rgba(255, 216, 129, 0.85) 92%, transparent 92%);
 }
 
-.hero-description {
-  max-width: 480px;
-  margin: 0 auto;
-  color: var(--text-muted);
+.hero-title::before,
+.hero-title::after {
+  position: absolute;
+  color: rgba(255, 137, 178, 0.78);
   font-size: 1rem;
-  line-height: 1.7;
+}
+
+.hero-title::before {
+  content: '✦';
+  left: 0;
+  top: -0.1rem;
+}
+
+.hero-title::after {
+  content: '✦';
+  right: 0.1rem;
+  bottom: 0.55rem;
 }
 
 .pinned-panel {
@@ -416,6 +441,7 @@ select {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-family: 'Gaegu', 'M PLUS Rounded 1c', sans-serif;
   font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -605,10 +631,11 @@ select {
 }
 
 .task-text {
+  font-family: 'Gaegu', 'M PLUS Rounded 1c', sans-serif;
   color: var(--text-main);
-  font-size: 1.05rem;
+  font-size: 1.22rem;
   font-weight: 500;
-  line-height: 1.65;
+  line-height: 1.55;
   word-break: break-word;
 }
 

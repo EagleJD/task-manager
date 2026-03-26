@@ -3,7 +3,7 @@ import KuromiStickers from '@/components/KuromiStickers';
 
 export const metadata = {
   title: 'My Task Diary',
-  description: '쿠로미 스티커가 가득한 다이어리 스타일 태스크 매니저',
+  description: 'Kuromi sticker diary task manager',
 };
 
 const bookmarks = [
@@ -48,10 +48,7 @@ export default function Home() {
           <div className="pin blue" style={{ top: '-10px', right: '14%' }}></div>
 
           <p className="hero-kicker">Diary board for the day</p>
-          <h1>My Task Diary</h1>
-          <p className="hero-description">
-            촘촘하게 깔린 쿠로미 스티커 배경 위에서 오늘의 태스크를 다이어리처럼 정리해보세요.
-          </p>
+          <h1 className="hero-title">My Task Diary</h1>
         </section>
 
         <main>
