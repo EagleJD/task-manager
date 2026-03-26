@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 const SOURCES = [
@@ -33,16 +34,8 @@ const SOURCES = [
   '/kuromi-stickers/kuromi-07-01-soft.png',
 ];
 
-const CLUSTER_POINTS = [
-  [4, 5], [14, 5], [24, 5], [34, 5], [44, 5], [54, 5], [64, 5], [74, 5], [84, 5], [94, 5],
-  [8, 18], [19, 18], [30, 18], [41, 18], [52, 18], [63, 18], [74, 18], [85, 18], [96, 18],
-  [4, 31], [15, 31], [26, 31], [37, 31], [48, 31], [59, 31], [70, 31], [81, 31], [92, 31],
-  [9, 44], [20, 44], [31, 44], [42, 44], [53, 44], [64, 44], [75, 44], [86, 44], [97, 44],
-  [4, 57], [15, 57], [26, 57], [37, 57], [48, 57], [59, 57], [70, 57], [81, 57], [92, 57],
-  [8, 70], [19, 70], [30, 70], [41, 70], [52, 70], [63, 70], [74, 70], [85, 70], [96, 70],
-  [4, 83], [14, 83], [24, 83], [34, 83], [44, 83], [54, 83], [64, 83], [74, 83], [84, 83], [94, 83],
-  [8, 95], [19, 95], [30, 95], [41, 95], [52, 95], [63, 95], [74, 95], [85, 95], [96, 95],
-];
+const DEFAULT_WIDTH = 1440;
+const DEFAULT_HEIGHT = 1900;
 
 function createRandom(seed) {
   let state = seed % 2147483647;
@@ -58,34 +51,121 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
-function buildStickers() {
-  const random = createRandom(52);
+function overlapsTooMuch(candidate, placed) {
+  return placed.some((sticker) => {
+    const overlapX =
+      Math.min(candidate.left + candidate.size / 2, sticker.left + sticker.size / 2) -
+      Math.max(candidate.left - candidate.size / 2, sticker.left - sticker.size / 2);
+    const overlapY =
+      Math.min(candidate.top + candidate.size / 2, sticker.top + sticker.size / 2) -
+      Math.max(candidate.top - candidate.size / 2, sticker.top - sticker.size / 2);
 
-  return CLUSTER_POINTS.flatMap(([x, y], clusterIndex) => {
-    const count = 4 + (clusterIndex % 3);
+    if (overlapX <= 0 || overlapY <= 0) {
+      return false;
+    }
 
-    return Array.from({ length: count }, (_, itemIndex) => {
-      const left = clamp(x + (random() - 0.5) * 9.5, -2, 102);
-      const top = clamp(y + (random() - 0.5) * 9.5, -2, 102);
-      const size = 114 + Math.round((random() - 0.5) * 18);
-      const rotation = Math.round((random() - 0.5) * 30);
+    const overlapArea = overlapX * overlapY;
+    const smallerArea = Math.min(candidate.size ** 2, sticker.size ** 2);
 
-      return {
-        src: SOURCES[(clusterIndex * 5 + itemIndex * 7 + Math.floor(random() * 11)) % SOURCES.length],
-        left: `${left}%`,
-        top: `${top}%`,
-        size,
-        rotation: `${rotation}deg`,
-      };
-    });
+    return overlapArea > smallerArea * 0.34;
   });
 }
 
-const STICKERS = buildStickers();
+function buildStickers(width, height) {
+  const safeWidth = Math.max(width, 360);
+  const safeHeight = Math.max(height, 1200);
+  const bandCount = Math.max(7, Math.ceil(safeHeight / 260));
+  const random = createRandom(Math.round(safeWidth + safeHeight + 52));
+  const stickers = [];
+
+  for (let bandIndex = 0; bandIndex < bandCount; bandIndex += 1) {
+    const yBase = ((bandIndex + 0.5) / bandCount) * safeHeight;
+    const clusterCount = Math.max(4, Math.round(safeWidth / 230) + ((bandIndex + 1) % 2));
+
+    for (let clusterIndex = 0; clusterIndex < clusterCount; clusterIndex += 1) {
+      const centerX = ((clusterIndex + 0.5) / clusterCount) * safeWidth + (random() - 0.5) * 76;
+      const centerY = yBase + (random() - 0.5) * 90;
+      const stickerCount = 3 + Math.floor(random() * 3);
+
+      for (let itemIndex = 0; itemIndex < stickerCount; itemIndex += 1) {
+        const size = 112 + Math.round((random() - 0.5) * 14);
+        const rotation = Math.round((random() - 0.5) * 30);
+        let placedSticker = null;
+
+        for (let attempt = 0; attempt < 24; attempt += 1) {
+          const spread = 56 + random() * 18;
+          const left = clamp(centerX + (random() - 0.5) * spread * 2.1, size * 0.42, safeWidth - size * 0.42);
+          const top = clamp(centerY + (random() - 0.5) * spread * 2.1, size * 0.42, safeHeight - size * 0.42);
+          const candidate = {
+            src: SOURCES[
+              (bandIndex * 13 + clusterIndex * 7 + itemIndex * 5 + Math.floor(random() * 17)) % SOURCES.length
+            ],
+            left,
+            top,
+            size,
+            rotation: `${rotation}deg`,
+          };
+
+          if (!overlapsTooMuch(candidate, stickers)) {
+            placedSticker = candidate;
+            break;
+          }
+
+          if (attempt > 14) {
+            const relaxedCandidate = { ...candidate, size: size - 4 };
+            if (!overlapsTooMuch(relaxedCandidate, stickers)) {
+              placedSticker = relaxedCandidate;
+              break;
+            }
+          }
+        }
+
+        if (placedSticker) {
+          stickers.push(placedSticker);
+        }
+      }
+    }
+  }
+
+  return stickers;
+}
 
 export default function KuromiStickers() {
+  const fieldRef = useRef(null);
+  const [stickers, setStickers] = useState(() => buildStickers(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+
+  useEffect(() => {
+    const field = fieldRef.current;
+    const wrapper = field?.closest('.page-wrapper');
+
+    if (!field || !wrapper) {
+      return undefined;
+    }
+
+    const updateStickers = () => {
+      const wrapperRect = wrapper.getBoundingClientRect();
+      const width = wrapperRect.width || window.innerWidth || DEFAULT_WIDTH;
+      const height = Math.max(wrapper.scrollHeight, wrapperRect.height, window.innerHeight, DEFAULT_HEIGHT);
+      setStickers(buildStickers(width, height));
+    };
+
+    updateStickers();
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateStickers();
+    });
+
+    resizeObserver.observe(wrapper);
+    window.addEventListener('resize', updateStickers);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateStickers);
+    };
+  }, []);
+
   return (
-    <div aria-hidden="true" className="sticker-field">
+    <div aria-hidden="true" className="sticker-field" ref={fieldRef}>
       <svg
         style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
         focusable="false"
@@ -111,14 +191,14 @@ export default function KuromiStickers() {
         </defs>
       </svg>
 
-      {STICKERS.map((sticker, index) => (
+      {stickers.map((sticker, index) => (
         <div
           key={`${sticker.src}-${index}`}
           className="sticker-cloud"
           style={{
-            top: sticker.top,
-            left: sticker.left,
-            opacity: 0.64,
+            top: `${sticker.top}px`,
+            left: `${sticker.left}px`,
+            opacity: 1,
             zIndex: 1 + (index % 4),
             transform: `translate(-50%, -50%) rotate(${sticker.rotation})`,
           }}

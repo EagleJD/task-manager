@@ -66,6 +66,7 @@ select {
   position: absolute;
   inset: 0;
   z-index: 1;
+  min-height: 100%;
   overflow: hidden;
   pointer-events: none;
 }
@@ -648,7 +649,6 @@ select {
   }
 
   .sticker-cloud {
-    opacity: 0.64 !important;
     transform: translate(-50%, -50%) scale(0.82) !important;
   }
 }
