@@ -398,8 +398,8 @@ body {
   overflow: visible;
 }
 
-/* 1600px 미만에서는 숨김 — 여백이 없어서 태스크와 겹침 */
-@media (max-width: 1599px) {
+/* 1200px 미만에서 숨김 (모서리 배치라 콘텐츠 방해 없음) */
+@media (max-width: 1199px) {
   .diary-char-wrapper { display: none; }
 }
 

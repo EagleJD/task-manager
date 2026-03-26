@@ -9,48 +9,48 @@ const TORN_FILTERS = [
   { id: 'torn-4', seed: 29 },
 ];
 
-// giphy_s.gif = 정적 프레임 (애니메이션 없음)
-// 상단 헤더/폼 옆에 배치 → 칸반보드 영역과 겹치지 않음
+// 4 모서리 + 오른쪽 중간 배치
+// 크게 키워서 뷰포트 밖으로 삐져나오게 → 일부분만 보이도록
 const CHARACTERS = [
   {
-    id: 'cinnamoroll',
-    src: 'https://media.giphy.com/media/JQAxGWgPNy5uCzFkHU/giphy_s.gif',
-    alt: '시나모롤',
+    id: 'kuromi-tl',
+    src: 'https://media.giphy.com/media/wEQBUOHFNmdYXK9DxY/giphy_s.gif',
+    alt: '쿠로미',
     filterId: 'torn-0',
-    style: { top: '70px',  left: '-6px',  '--rotate': '-8deg'  },
-    size: 100,
+    style: { top: '-35px', left: '-50px', '--rotate': '-16deg' },
+    size: 310,
   },
   {
-    id: 'pompompurin',
-    src: 'https://media.giphy.com/media/kyRDodDhqXcG2ro6GV/giphy_s.gif',
-    alt: '폼폼푸린',
-    filterId: 'torn-1',
-    style: { top: '310px', left: '-8px',  '--rotate': '12deg'  },
-    size: 92,
-  },
-  {
-    id: 'mymelody',
+    id: 'mymelody-tr',
     src: 'https://media.giphy.com/media/U7VI2RFA6VcH2Gm7H9/giphy_s.gif',
     alt: '마이멜로디',
+    filterId: 'torn-1',
+    style: { top: '-25px', right: '-55px', '--rotate': '18deg' },
+    size: 330,
+  },
+  {
+    id: 'pompompurin-bl',
+    src: 'https://media.giphy.com/media/kd92rDAkBsxH3U9DgK/giphy_s.gif',
+    alt: '폼폼푸린',
     filterId: 'torn-2',
-    style: { top: '55px',  right: '-5px', '--rotate': '10deg'  },
-    size: 105,
+    style: { bottom: '-50px', left: '-45px', '--rotate': '13deg' },
+    size: 290,
   },
   {
-    id: 'kuromi',
-    src: 'https://media.giphy.com/media/oVeUzLxNPkAtxJ5IZ9/giphy_s.gif',
-    alt: '쿠로미',
-    filterId: 'torn-3',
-    style: { top: '310px', right: '-7px', '--rotate': '-9deg'  },
-    size: 96,
-  },
-  {
-    id: 'cinnamoroll-b',
+    id: 'cinnamoroll-br',
     src: 'https://media.giphy.com/media/lTY8pVIs76YOMDaDjY/giphy_s.gif',
-    alt: '시나모롤b',
+    alt: '시나모롤',
+    filterId: 'torn-3',
+    style: { bottom: '-35px', right: '-65px', '--rotate': '-14deg' },
+    size: 370,
+  },
+  {
+    id: 'kuromi-rm',
+    src: 'https://media.giphy.com/media/oVeUzLxNPkAtxJ5IZ9/giphy_s.gif',
+    alt: '쿠로미b',
     filterId: 'torn-4',
-    style: { top: '560px', right: '-6px', '--rotate': '7deg'   },
-    size: 98,
+    style: { top: '40%', right: '-75px', '--rotate': '22deg' },
+    size: 270,
   },
 ];
 
