@@ -1,15 +1,16 @@
-import { sql } from '@vercel/postgres';
+import { neon } from '@neondatabase/serverless';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const { rows } = await sql`SELECT * FROM tasks ORDER BY position ASC, created_at DESC`;
+    const sql = neon(process.env.DATABASE_URL || process.env.POSTGRES_URL);
+    const rows = await sql`SELECT * FROM tasks ORDER BY position ASC, created_at DESC`;
     return NextResponse.json(rows);
   } catch (error) {
-    // If the table doesn't exist yet, create it automatically
     if (error.message.includes('relation "tasks" does not exist') || error.message.includes('tasks" does not exist')) {
+      const sql = neon(process.env.DATABASE_URL || process.env.POSTGRES_URL);
       await sql`
         CREATE TABLE IF NOT EXISTS tasks (
           id SERIAL PRIMARY KEY,
@@ -29,8 +30,9 @@ export async function GET() {
 
 export async function POST(request) {
   try {
+    const sql = neon(process.env.DATABASE_URL || process.env.POSTGRES_URL);
     const { text, category, priority } = await request.json();
-    const { rows } = await sql`
+    const rows = await sql`
       INSERT INTO tasks (text, category, priority, completed, position)
       VALUES (${text}, ${category}, ${priority}, false, 0)
       RETURNING *
