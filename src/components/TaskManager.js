@@ -42,9 +42,9 @@ export default function TaskManager() {
     setSubmitting(true);
     const tempId = Date.now();
     const isoDueDate = dueDate ? new Date(dueDate).toISOString() : null;
-    const newTask = { id: tempId, text, category, priority, due_date: isoDueDate, completed: false, created_at: new Date().toISOString() };
-    
-    setTasks(prev => [newTask, ...prev]);
+    // Remove optimistic update to prevent double-popup animation on server response
+    // const newTask = { id: tempId, text, category, priority, due_date: isoDueDate, completed: false, created_at: new Date().toISOString() };
+    // setTasks(prev => [newTask, ...prev]);
 
     try {
       const res = await fetch('/api/tasks', {
@@ -54,14 +54,14 @@ export default function TaskManager() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'API failed to save task');
-      
-      setTasks(prev => prev.map(t => t.id === tempId ? data : t));
+      // Append exactly what server returns to trigger exactly one animation
+      setTasks(prev => [data, ...prev]);
       setText('');
       setErrorMsg(null);
     } catch (err) {
       console.error('Failed to add task:', err);
       setErrorMsg(err.message);
-      setTasks(prev => prev.filter(t => t.id !== tempId));
+      // setTasks(prev => prev.filter(t => t.id !== tempId));
     } finally {
       setSubmitting(false);
     }
@@ -239,8 +239,8 @@ export default function TaskManager() {
         
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ flex: 1, position: 'relative', minWidth: '180px' }}>
-            <Calendar size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '16px' }} />
-            <input type="datetime-local" className="input-field select-field" style={{ paddingLeft: '2.5rem', cursor: 'pointer', color: dueDate ? 'var(--text-main)' : 'var(--text-muted)' }} value={dueDate} onChange={e => setDueDate(e.target.value)} />
+            <Calendar size={16} color="var(--pastel-yellow)" style={{ position: 'absolute', left: '12px', top: '16px', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }} />
+            <input type="datetime-local" className="input-field select-field" style={{ paddingLeft: '2.5rem', cursor: 'pointer', color: dueDate ? 'var(--text-main)' : 'rgba(255,255,255,0.4)', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.15)' }} value={dueDate} onChange={e => setDueDate(e.target.value)} />
           </div>
           <select 
             className="input-field select-field" style={{ flex: 1, minWidth: '140px', cursor: 'pointer' }}
@@ -276,19 +276,19 @@ export default function TaskManager() {
         </div>
       ) : (
         <div className="kanban-board">
-          <div className="kanban-col">
+          <div className="kanban-col-wrapper">
             <div className="col-header" style={{ color: 'var(--danger)' }}>🔥 High <span>{highTasks.length}</span></div>
-            {highTasks.map((task, idx) => renderTaskItem(task, idx))}
+            <div className="kanban-col">{highTasks.map((task, idx) => renderTaskItem(task, idx))}</div>
           </div>
 
-          <div className="kanban-col">
+          <div className="kanban-col-wrapper">
             <div className="col-header" style={{ color: 'var(--pastel-purple)' }}>⭐ Medium <span>{mediumTasks.length}</span></div>
-            {mediumTasks.map((task, idx) => renderTaskItem(task, idx))}
+            <div className="kanban-col">{mediumTasks.map((task, idx) => renderTaskItem(task, idx))}</div>
           </div>
 
-          <div className="kanban-col">
+          <div className="kanban-col-wrapper">
             <div className="col-header" style={{ color: 'var(--success)' }}>🟢 Low <span>{lowTasks.length}</span></div>
-            {lowTasks.map((task, idx) => renderTaskItem(task, idx))}
+            <div className="kanban-col">{lowTasks.map((task, idx) => renderTaskItem(task, idx))}</div>
           </div>
         </div>
       )}
