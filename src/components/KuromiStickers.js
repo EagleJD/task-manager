@@ -34,8 +34,10 @@ const SOURCES = [
   '/kuromi-stickers/kuromi-07-01-soft.png',
   '/sanrio-stickers/badtz-maru-01.svg',
   '/sanrio-stickers/badtz-maru-02.svg',
+  '/sanrio-stickers/badtz-maru-03.svg',
   '/sanrio-stickers/gudetama-01.svg',
   '/sanrio-stickers/gudetama-02.svg',
+  '/sanrio-stickers/gudetama-03.svg',
 ];
 
 const DEFAULT_WIDTH = 1440;

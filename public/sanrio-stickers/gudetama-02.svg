@@ -1,23 +1,15 @@
 <svg width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <filter id="shadow" x="10" y="12" width="200" height="196" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#7A6474" flood-opacity="0.18"/>
-    </filter>
-  </defs>
-  <g filter="url(#shadow)">
-    <path d="M48 24C72 20 148 20 172 24C186 46 194 70 194 110C194 150 186 174 172 196C148 200 72 200 48 196C34 174 26 150 26 110C26 70 34 46 48 24Z" fill="white"/>
-    <path d="M48 136C48 99 76 81 111 81C146 81 174 99 174 136C174 163 151 182 111 182C71 182 48 163 48 136Z" fill="#FFF8F5"/>
-    <ellipse cx="111" cy="108" rx="39" ry="29" fill="#FFC740"/>
-    <path d="M82 102C94 95 108 92 128 96" stroke="#ECA83A" stroke-width="6" stroke-linecap="round"/>
-    <ellipse cx="99" cy="110" rx="5" ry="4.2" fill="#5C473E"/>
-    <ellipse cx="124" cy="114" rx="5" ry="4.2" fill="#5C473E"/>
-    <path d="M98 126C104 129 118 130 126 126" stroke="#795A45" stroke-width="4.5" stroke-linecap="round"/>
-    <path d="M80 128C76 143 83 151 94 157" stroke="#7B5C46" stroke-width="4.5" stroke-linecap="round"/>
-    <path d="M142 124C147 139 141 149 129 156" stroke="#7B5C46" stroke-width="4.5" stroke-linecap="round"/>
-    <path d="M62 60C83 43 136 39 161 56" stroke="#F5DCAE" stroke-width="11" stroke-linecap="round"/>
-    <path d="M65 61C85 47 136 45 158 59" stroke="#FDE9BD" stroke-width="7" stroke-linecap="round"/>
-    <circle cx="61" cy="154" r="13" fill="#F9E4BC"/>
-    <text x="61" y="159" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#8A673C">egg</text>
-    <text x="110" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#876340">GUDETAMA</text>
-  </g>
+  <path d="M35 42C72 28 148 28 185 42C195 65 195 146 185 170C148 184 72 184 35 170C25 146 25 65 35 42Z" fill="white"/>
+  <path d="M50 141C50 111 76 92 111 92C146 92 172 111 172 141C172 162 151 177 111 177C71 177 50 162 50 141Z" fill="#FFF8F4"/>
+  <ellipse cx="111" cy="116" rx="39" ry="28" fill="#F8C33E"/>
+  <path d="M84 110C93 102 106 100 127 102" stroke="#E3A43A" stroke-width="5" stroke-linecap="round"/>
+  <ellipse cx="99" cy="118" rx="4.8" ry="3.8" fill="#634E43"/>
+  <ellipse cx="123" cy="121" rx="4.8" ry="3.8" fill="#634E43"/>
+  <path d="M98 132C104 136 117 136 123 132" stroke="#7C5C48" stroke-width="4" stroke-linecap="round"/>
+  <path d="M77 136C81 147 89 155 98 159" stroke="#7C5C48" stroke-width="4" stroke-linecap="round"/>
+  <path d="M145 133C142 145 134 153 125 158" stroke="#7C5C48" stroke-width="4" stroke-linecap="round"/>
+  <path d="M69 73C91 61 130 60 151 73" stroke="#FDE9BD" stroke-width="14" stroke-linecap="round"/>
+  <path d="M69 73C89 66 132 66 151 75" stroke="#FFF1CC" stroke-width="7" stroke-linecap="round"/>
+  <rect x="144" y="149" width="31" height="22" rx="11" fill="#F6E5BF"/>
+  <path d="M152 160C156 155 163 155 167 160" stroke="#D49E47" stroke-width="3.5" stroke-linecap="round"/>
 </svg>

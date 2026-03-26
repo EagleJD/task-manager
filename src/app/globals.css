@@ -109,10 +109,11 @@ select {
   z-index: 0;
   border-radius: 28px;
   background:
+    radial-gradient(circle at 50% 42%, rgba(125, 98, 114, 0.18), rgba(125, 98, 114, 0.06) 30%, transparent 62%),
     radial-gradient(circle at 8% 12%, rgba(255, 255, 255, 0.7) 0 1.5px, transparent 1.8px) 0 0 / 24px 24px,
     radial-gradient(circle at 74% 36%, rgba(229, 189, 203, 0.24) 0 1.2px, transparent 1.5px) 0 0 / 19px 19px,
-    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
-  opacity: 0.85;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0));
+  opacity: 0.92;
   pointer-events: none;
 }
 
@@ -126,10 +127,21 @@ select {
 
 .sticker-field {
   position: absolute;
-  inset: 0;
+  inset: 1.7rem 1.9rem 1.9rem;
   z-index: 1;
   min-height: 100%;
   overflow: hidden;
+  pointer-events: none;
+  filter: saturate(0.58) brightness(0.88) contrast(0.94);
+}
+
+.sticker-field::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(94, 74, 86, 0.16), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
   pointer-events: none;
 }
 
@@ -712,6 +724,10 @@ select {
   .diary-surface::after {
     inset: 0.25rem;
     border-radius: 20px;
+  }
+
+  .sticker-field {
+    inset: 1.1rem 1rem 1.15rem;
   }
 
   .kanban-board {
