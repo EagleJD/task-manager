@@ -48,7 +48,7 @@ const CHARACTERS = [
     src: 'https://media.giphy.com/media/Qtvvgwbl1svKYcUGIT/giphy_s.gif', // 481×481
     alt: '쿠로미b',
     filterId: 'torn-4',
-    style: { top: '40%', right: '-75px', '--rotate': '22deg' },
+    style: { top: '40%', right: '-195px', '--rotate': '22deg' },
     size: 270,
   },
 ];
