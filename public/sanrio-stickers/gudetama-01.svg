@@ -1,0 +1,22 @@
+<svg width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="8" y="14" width="204" height="192" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#7A6474" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M38 30C78 20 146 20 186 30C198 60 198 146 186 176C146 188 78 188 38 176C26 146 26 60 38 30Z" fill="white"/>
+    <path d="M110 182C63 182 40 164 40 132C40 104 57 90 77 90C89 90 96 95 104 95C111 95 117 87 136 87C158 87 180 101 180 131C180 162 155 182 110 182Z" fill="#FFF6F8"/>
+    <ellipse cx="111" cy="110" rx="43" ry="34" fill="#FFC940"/>
+    <path d="M74 112C78 94 92 82 111 82C130 82 145 94 148 112" fill="#FFD862"/>
+    <ellipse cx="96" cy="109" rx="5.5" ry="4.5" fill="#5A453B"/>
+    <ellipse cx="124" cy="112" rx="5.5" ry="4.5" fill="#5A453B"/>
+    <path d="M96 126C105 131 118 131 126 126" stroke="#7B5C46" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M85 127C92 138 99 145 112 145C127 145 136 136 143 124" stroke="#ECA93B" stroke-width="7" stroke-linecap="round"/>
+    <path d="M70 134C79 130 88 134 92 142" stroke="#7B5C46" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M144 132C137 133 131 138 127 145" stroke="#7B5C46" stroke-width="4.5" stroke-linecap="round"/>
+    <rect x="56" y="34" width="108" height="24" rx="12" fill="#FDE7BF"/>
+    <text x="110" y="51" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#876340">GUDETAMA</text>
+    <text x="110" y="168" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#D79A34">so sleepy</text>
+  </g>
+</svg>

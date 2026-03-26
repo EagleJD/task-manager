@@ -32,6 +32,10 @@ const SOURCES = [
   '/kuromi-stickers/kuromi-07-01-glow.png',
   '/kuromi-stickers/kuromi-07-01-mirror.png',
   '/kuromi-stickers/kuromi-07-01-soft.png',
+  '/sanrio-stickers/badtz-maru-01.svg',
+  '/sanrio-stickers/badtz-maru-02.svg',
+  '/sanrio-stickers/gudetama-01.svg',
+  '/sanrio-stickers/gudetama-02.svg',
 ];
 
 const DEFAULT_WIDTH = 1440;
@@ -138,20 +142,18 @@ export default function KuromiStickers() {
 
   useEffect(() => {
     const field = fieldRef.current;
-    const wrapper = field?.closest('.page-wrapper');
+    const surface = field?.closest('.diary-surface');
 
-    if (!field || !wrapper) {
+    if (!field || !surface) {
       return undefined;
     }
 
     const updateStickers = () => {
-      const wrapperRect = wrapper.getBoundingClientRect();
-      const width = wrapperRect.width || window.innerWidth || DEFAULT_WIDTH;
+      const surfaceRect = surface.getBoundingClientRect();
+      const width = surfaceRect.width || window.innerWidth || DEFAULT_WIDTH;
       const height = Math.max(
-        wrapper.scrollHeight,
-        document.body.scrollHeight,
-        document.documentElement.scrollHeight,
-        wrapperRect.height,
+        surface.scrollHeight,
+        surfaceRect.height,
         window.innerHeight,
         DEFAULT_HEIGHT
       );
@@ -164,7 +166,8 @@ export default function KuromiStickers() {
       updateStickers();
     });
 
-    resizeObserver.observe(wrapper);
+    resizeObserver.observe(surface);
+    resizeObserver.observe(document.body);
     window.addEventListener('resize', updateStickers);
 
     return () => {

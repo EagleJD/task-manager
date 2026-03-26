@@ -15,7 +15,9 @@ const bookmarks = [
 export default function Home() {
   return (
     <div className="page-wrapper">
-      <KuromiStickers />
+      <div className="diary-surface" aria-hidden="true">
+        <KuromiStickers />
+      </div>
 
       <div className="top-bookmarks" aria-hidden="true">
         {bookmarks.map((bookmark) => (
