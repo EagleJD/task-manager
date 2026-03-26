@@ -8,8 +8,8 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <>
-      {/* 스티커는 .container 밖 → root stacking context z-index:1 (container z-index:5 아래) */}
+    <div className="page-wrapper">
+      {/* 스티커: page-wrapper 기준 absolute → 스크롤과 함께 움직임 */}
       <KuromiStickers />
 
       <div className="container animate-in">
@@ -28,6 +28,6 @@ export default function Home() {
           <TaskManager />
         </main>
       </div>
-    </>
+    </div>
   );
 }

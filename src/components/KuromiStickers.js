@@ -97,10 +97,10 @@ export default function KuromiStickers() {
         <div
           key={i}
           style={{
-            position: 'fixed',
+            position: 'absolute',
             ...pos,
             transform: `rotate(${rotate})`,
-            zIndex: 1,
+            zIndex: 0,
             pointerEvents: 'none',
             userSelect: 'none',
             overflow: 'visible',

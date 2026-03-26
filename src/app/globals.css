@@ -57,12 +57,19 @@ body {
   position: relative;
 }
 
+/* 스티커 absolute positioning 기준점 */
+.page-wrapper {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+}
+
 .container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 3rem 1.5rem;
   position: relative;
-  z-index: 5;
+  z-index: 1;
 }
 
 /* Kanban Board Layout */
