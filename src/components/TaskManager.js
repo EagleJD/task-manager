@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Trash2, Loader2, Sparkles, Folder, Zap } from 'lucide-react';
+import { Trash2, Loader2, Plus, Check } from 'lucide-react';
 
 export default function TaskManager() {
   const [tasks, setTasks] = useState([]);
@@ -21,7 +21,7 @@ export default function TaskManager() {
       const res = await fetch('/api/tasks');
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to connect to Neon Matrix.');
+        throw new Error(data.error || 'Failed to connect to database.');
       }
       setTasks(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -94,110 +94,104 @@ export default function TaskManager() {
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: '5rem', color: 'var(--neon-cyan)' }}>
-        <Loader2 size={48} style={{ margin: '0 auto', animation: 'spin 1s linear infinite', filter: 'drop-shadow(0 0 10px rgba(61, 234, 220, 0.8))' }} />
-        <p style={{ marginTop: '2rem', fontSize: '1.2rem', fontWeight: 600, letterSpacing: '0.1em', animation: 'pulse 2s infinite' }}>ESTABLISHING NEON LINK...</p>
-        <style>{`@keyframes spin { 100% { transform: rotate(360deg); } } @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }`}</style>
+      <div style={{ textAlign: 'center', padding: '5rem', color: 'var(--text-muted)' }}>
+        <Loader2 size={40} style={{ margin: '0 auto', animation: 'spin 1s linear infinite', color: 'var(--pastel-blue)' }} />
+        <p style={{ marginTop: '1.5rem', fontSize: '1.1rem', fontWeight: 500 }}>Loading tasks...</p>
+        <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
       </div>
     );
   }
 
   return (
     <div>
-      {/* Input Form Panel */}
-      <form onSubmit={addTask} className="pinned-panel" style={{ padding: '2.5rem', marginBottom: '4rem' }}>
-        {/* Pins for Input Form */}
-        <div className="pin cyan" style={{ top: '-10px', left: '-10px' }}></div>
-        <div className="pin purple" style={{ top: '-10px', right: '-10px' }}></div>
-        <div className="pin purple" style={{ bottom: '-10px', left: '-10px' }}></div>
-        <div className="pin cyan" style={{ bottom: '-10px', right: '-10px' }}></div>
+      <form onSubmit={addTask} className="pinned-panel" style={{ padding: '2.5rem', marginBottom: '3.5rem' }}>
+        <div className="pin blue" style={{ top: '-8px', left: '-8px' }}></div>
+        <div className="pin purple" style={{ top: '-8px', right: '-8px' }}></div>
+        <div className="pin yellow" style={{ bottom: '-8px', left: '-8px' }}></div>
+        <div className="pin pink" style={{ bottom: '-8px', right: '-8px' }}></div>
 
         {errorMsg && (
-          <div style={{ padding: '1rem', marginBottom: '1.5rem', background: 'rgba(255, 92, 141, 0.1)', color: 'var(--danger)', border: '1px solid var(--danger)', borderRadius: '6px', fontSize: '0.95rem' }}>
-            <strong style={{ letterSpacing: '0.05em' }}>SYSTEM ERROR:</strong> {errorMsg}
+          <div style={{ padding: '1rem', marginBottom: '1.5rem', background: '#fef2f2', color: '#b91c1c', border: '1px solid #fca5a5', borderRadius: '8px', fontSize: '0.95rem' }}>
+            <strong>Error:</strong> {errorMsg}
           </div>
         )}
+        
         <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
           <input
             type="text"
             className="input-field"
-            placeholder="Initialize new objective..."
+            placeholder="What needs to be done?"
             value={text}
             onChange={e => setText(e.target.value)}
             disabled={submitting}
             autoFocus
           />
         </div>
+        
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, position: 'relative' }}>
-            <Folder size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '16px' }} />
-            <select 
-              className="input-field select-field" style={{ paddingLeft: '2.5rem', cursor: 'pointer' }}
-              value={category} onChange={e => setCategory(e.target.value)}
-            >
-              <option value="Work">CORPORATE</option>
-              <option value="Personal">PERSONAL</option>
-              <option value="Study">RESEARCH</option>
-            </select>
-          </div>
+          <select 
+            className="input-field select-field" style={{ flex: 1, minWidth: '140px', cursor: 'pointer' }}
+            value={category} onChange={e => setCategory(e.target.value)}
+          >
+            <option value="Work">Corporate</option>
+            <option value="Personal">Personal</option>
+            <option value="Study">Study</option>
+          </select>
           
-          <div style={{ flex: 1, position: 'relative' }}>
-            <Zap size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '16px' }} />
-            <select 
-              className="input-field select-field" style={{ paddingLeft: '2.5rem', cursor: 'pointer' }}
-              value={priority} onChange={e => setPriority(e.target.value)}
-            >
-              <option value="low">LOW YIELD</option>
-              <option value="medium">STANDARD</option>
-              <option value="high">CRITICAL</option>
-            </select>
-          </div>
+          <select 
+            className="input-field select-field" style={{ flex: 1, minWidth: '140px', cursor: 'pointer' }}
+            value={priority} onChange={e => setPriority(e.target.value)}
+          >
+            <option value="low">Low Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="high">High Priority</option>
+          </select>
           
           <button type="submit" className="btn-primary" disabled={!text.trim() || submitting} style={{ flex: 1, minWidth: '160px' }}>
-            {submitting ? <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> : <Sparkles size={18} />}
-            EXECUTE
+            {submitting ? <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> : <Plus size={20} />}
+            Add Task
           </button>
         </div>
       </form>
 
-      {/* Task List */}
       <div className="tasks-container">
         {tasks.length === 0 ? (
-          <div className="pinned-panel animate-in" style={{ padding: '6rem 2rem', textAlign: 'center' }}>
-            <div className="pin cyan" style={{ top: '-10px', left: '50%', transform: 'translateX(-50%)' }}></div>
-            <div style={{ fontSize: '4.5rem', marginBottom: '1.5rem', color: 'var(--neon-purple)', textShadow: '0 0 20px rgba(181, 111, 245, 0.4)' }}>✨</div>
-            <h3 style={{ fontSize: '1.75rem', color: '#fff', marginBottom: '1rem', letterSpacing: '0.05em' }}>DATABANKS EMPTY</h3>
-            <p style={{ opacity: 0.7, fontSize: '1.1rem' }}>Transmit your first objective to the Neon Matrix.</p>
+          <div className="pinned-panel animate-in" style={{ padding: '5rem 2rem', textAlign: 'center' }}>
+            <div className="pin blue" style={{ top: '-8px', left: '50%', transform: 'translateX(-50%)' }}></div>
+            <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>📝</div>
+            <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>No tasks found</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>Pin your first task to the board.</p>
           </div>
         ) : (
           tasks.map((task, idx) => (
             <div 
               key={task.id} 
               className={`pinned-panel task-item animate-item ${task.completed ? 'completed' : ''}`}
-              style={{ animationDelay: `${Math.min(idx * 0.05, 0.5)}s` }}
+              style={{ animationDelay: `${Math.min(idx * 0.05, 0.5)}s`, borderLeftColor: task.priority === 'high' ? 'var(--danger)' : task.priority === 'low' ? 'var(--success)' : 'var(--pastel-blue)' }}
             >
-              {/* Task Pins */}
-              <div className="pin purple" style={{ top: '-10px', left: '-10px' }}></div>
-              <div className="pin cyan" style={{ bottom: '-10px', right: '-10px' }}></div>
+              <div className="pin yellow" style={{ top: '-8px', left: '15px' }}></div>
+              <div className="pin pink" style={{ top: '-8px', right: '15px' }}></div>
 
-              <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+              <div style={{ display: 'flex', alignItems: 'center', width: '100%', marginTop: '0.5rem' }}>
                 <div 
                   className={`status-circle ${task.completed ? 'active' : ''}`} 
                   onClick={() => toggleTask(task.id, task.completed)}
-                ></div>
+                >
+                  {task.completed && <Check size={14} color="#fff" strokeWidth={3} />}
+                </div>
                 
-                <div style={{ display: 'flex', flexDirection: 'column', flex: 1, marginLeft: '1rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', flex: 1, marginLeft: '1.25rem' }}>
                   <span className="task-text">{task.text}</span>
                   
-                  <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.8rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     <span className="badge category">
-                      {task.category.toUpperCase()}
+                      {task.category}
                     </span>
                     <span className={`badge priority-${task.priority}`}>
-                      ⚡ {task.priority === 'high' ? 'CRITICAL' : task.priority === 'medium' ? 'STD' : 'LOW'}
+                      {task.priority === 'high' ? 'High' : task.priority === 'medium' ? 'Medium' : 'Low'}
                     </span>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginLeft: 'auto', letterSpacing: '0.05em' }}>
-                      | {new Date(task.created_at || Date.now()).toLocaleTimeString()} |
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500, marginLeft: 'auto' }}>
+                      {new Date(task.created_at || Date.now()).toLocaleDateString()} {new Date(task.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
                 </div>
