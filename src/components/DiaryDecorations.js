@@ -32,7 +32,7 @@ const CHARACTERS = [
     src: 'https://media.giphy.com/media/kyRDodDhqXcG2ro6GV/giphy_s.gif', // 480×480
     alt: '폼폼푸린',
     filterId: 'torn-2',
-    style: { bottom: '-50px', left: '-45px', '--rotate': '13deg' },
+    style: { bottom: '-490px', left: '-310px', '--rotate': '13deg' },
     size: 790,
   },
   {
@@ -40,7 +40,7 @@ const CHARACTERS = [
     src: 'https://media.giphy.com/media/lTY8pVIs76YOMDaDjY/giphy_s.gif', // 407×480 세로형
     alt: '시나모롤',
     filterId: 'torn-3',
-    style: { bottom: '-35px', right: '-65px', '--rotate': '-14deg' },
+    style: { bottom: '-470px', right: '-295px', '--rotate': '-14deg' },
     size: 770,
   },
   {
@@ -80,44 +80,47 @@ export default function DiaryDecorations() {
                 result="noise"
               />
 
-              {/* 캐릭터 알파 팽창 → 테두리 영역 생성 */}
+              {/* 캐릭터 알파 팽창 → 적당한 두께의 테두리 생성 */}
               <feMorphology
                 operator="dilate"
-                radius="3"
+                radius="5"
                 in="SourceAlpha"
                 result="expanded"
               />
 
-              {/* 테두리 외곽에 노이즈 변위 → 불규칙 찢긴 자국 */}
+              {/* 변위량을 테두리 두께와 비슷하게 유지 → 자연스러운 찢김 */}
               <feDisplacementMap
                 in="expanded"
                 in2="noise"
-                scale="20"
+                scale="7"
                 xChannelSelector="R"
                 yChannelSelector="G"
                 result="tornEdge"
               />
 
+              {/* 테두리 가장자리 미세 블러 → 딱딱한 디지털 느낌 제거 */}
+              <feGaussianBlur in="tornEdge" stdDeviation="0.6" result="softEdge" />
+
               {/* 캐릭터별 아웃라인 색상 */}
               <feFlood floodColor={color} result="borderColor" />
               <feComposite
                 in="borderColor"
-                in2="tornEdge"
+                in2="softEdge"
                 operator="in"
                 result="coloredBorder"
               />
 
-              {/* 종이 grain 레이어 — 찢긴 테두리에 질감 추가 */}
+              {/* 종이 grain — 자연스러운 저주파 노이즈 */}
               <feTurbulence
                 type="fractalNoise"
-                baseFrequency="2"
-                numOctaves="4"
+                baseFrequency="0.65"
+                numOctaves="3"
                 seed={seed + 5}
                 result="grain"
               />
               <feColorMatrix type="saturate" values="0" in="grain" result="grayGrain" />
-              <feComposite in="grayGrain" in2="tornEdge" operator="in" result="grainMask" />
-              <feBlend in="coloredBorder" in2="grainMask" mode="multiply" result="texturedBorder" />
+              <feComposite in="grayGrain" in2="softEdge" operator="in" result="grainMask" />
+              <feBlend in="coloredBorder" in2="grainMask" mode="soft-light" result="texturedBorder" />
 
               {/* 최종: 찢긴 테두리 뒤 + 원본 캐릭터 앞 */}
               <feMerge>
