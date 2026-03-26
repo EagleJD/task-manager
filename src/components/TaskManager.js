@@ -10,6 +10,7 @@ export default function TaskManager() {
   const [priority, setPriority] = useState('medium');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     fetchTasks();
@@ -19,9 +20,13 @@ export default function TaskManager() {
     try {
       const res = await fetch('/api/tasks');
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to fetch API tasks. Check Vercel Postgres DB Connection!');
+      }
       setTasks(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to fetch:', err);
+      setErrorMsg(err.message);
     } finally {
       setLoading(false);
     }
@@ -44,12 +49,16 @@ export default function TaskManager() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, category, priority })
       });
-      const savedTask = await res.json();
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API failed to save task');
+      
       // Replace optimistic task with DB master record
-      setTasks(prev => prev.map(t => t.id === tempId ? savedTask : t));
+      setTasks(prev => prev.map(t => t.id === tempId ? data : t));
       setText('');
+      setErrorMsg(null);
     } catch (err) {
       console.error('Failed to add task:', err);
+      setErrorMsg(err.message);
       // Revert optimistic update on failure
       setTasks(prev => prev.filter(t => t.id !== tempId));
     } finally {
@@ -61,12 +70,15 @@ export default function TaskManager() {
     // Optimistic toggle
     setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
     try {
-      await fetch(`/api/tasks/${id}`, {
+      const res = await fetch(`/api/tasks/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ completed: !currentStatus })
       });
+      if (!res.ok) throw new Error('API failed to toggle');
+      setErrorMsg(null);
     } catch (err) {
+      setErrorMsg(err.message);
       // Revert on error
       setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: currentStatus } : t));
     }
@@ -77,8 +89,11 @@ export default function TaskManager() {
     // Optimistic delete
     setTasks(prev => prev.filter(t => t.id !== id));
     try {
-      await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/tasks/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('API failed to delete');
+      setErrorMsg(null);
     } catch (err) {
+      setErrorMsg(err.message);
       setTasks(backup);
     }
   };
@@ -96,6 +111,11 @@ export default function TaskManager() {
   return (
     <div>
       <form onSubmit={addTask} className="glass-panel" style={{ padding: '1.5rem', marginBottom: '2rem' }}>
+        {errorMsg && (
+          <div style={{ padding: '0.75rem', marginBottom: '1rem', background: 'rgba(239, 68, 68, 0.1)', color: 'var(--danger)', border: '1px solid var(--danger)', borderRadius: '8px', fontSize: '0.9rem' }}>
+            <strong>Connection Error:</strong> {errorMsg}
+          </div>
+        )}
         <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
           <input
             type="text"
@@ -154,12 +174,15 @@ export default function TaskManager() {
               
               <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <span className="task-text">{task.text}</span>
-                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.4rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.4rem', alignItems: 'center' }}>
                   <span className="badge" style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', color: 'var(--text-main)' }}>
                     {task.category}
                   </span>
                   <span className={`badge priority-${task.priority}`}>
                     {task.priority === 'high' ? '🔥 High' : task.priority === 'medium' ? '⚡ Med' : '🌱 Low'}
+                  </span>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                    ⏱ {new Date(task.created_at || Date.now()).toLocaleString()}
                   </span>
                 </div>
               </div>
