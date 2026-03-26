@@ -1,5 +1,6 @@
 import TaskManager from '@/components/TaskManager';
 import DiaryDecorations from '@/components/DiaryDecorations';
+import DiaryBackground from '@/components/DiaryBackground';
 
 export const metadata = {
   title: '✨ My Task Diary 🌸',
@@ -24,6 +25,7 @@ export default function Home() {
         <TaskManager />
       </main>
       <DiaryDecorations />
+      <DiaryBackground />
     </div>
   );
 }
