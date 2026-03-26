@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Trash2, Loader2, Plus, Check } from 'lucide-react';
+import { Trash2, Loader2, Plus, Check, Calendar, X } from 'lucide-react';
 
 export default function TaskManager() {
   const [tasks, setTasks] = useState([]);
@@ -11,6 +11,9 @@ export default function TaskManager() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [dueDate, setDueDate] = useState('');
+  const [editingDueDateId, setEditingDueDateId] = useState(null);
+  const [editingDueDateVal, setEditingDueDateVal] = useState('');
 
   useEffect(() => {
     fetchTasks();
@@ -38,7 +41,8 @@ export default function TaskManager() {
     
     setSubmitting(true);
     const tempId = Date.now();
-    const newTask = { id: tempId, text, category, priority, completed: false, created_at: new Date().toISOString() };
+    const isoDueDate = dueDate ? new Date(dueDate).toISOString() : null;
+    const newTask = { id: tempId, text, category, priority, due_date: isoDueDate, completed: false, created_at: new Date().toISOString() };
     
     setTasks(prev => [newTask, ...prev]);
 
@@ -46,7 +50,7 @@ export default function TaskManager() {
       const res = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, category, priority })
+        body: JSON.stringify({ text, category, priority, due_date: isoDueDate })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'API failed to save task');
@@ -79,6 +83,24 @@ export default function TaskManager() {
     }
   };
 
+  const updateDueDate = async (id, newDueDate) => {
+    const isoDueDate = newDueDate ? new Date(newDueDate).toISOString() : null;
+    const backup = [...tasks];
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, due_date: isoDueDate } : t));
+    setEditingDueDateId(null);
+    try {
+      const res = await fetch(`/api/tasks/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ due_date: isoDueDate })
+      });
+      if (!res.ok) throw new Error('API failed to update due date');
+    } catch (err) {
+      setErrorMsg(err.message);
+      setTasks(backup);
+    }
+  };
+
   const deleteTask = async (id) => {
     const backup = [...tasks];
     setTasks(prev => prev.filter(t => t.id !== id));
@@ -101,6 +123,13 @@ export default function TaskManager() {
       </div>
     );
   }
+
+  const formatDatetimeForInput = (isoString) => {
+    if (!isoString) return '';
+    const date = new Date(isoString);
+    const offset = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+  };
 
   return (
     <div>
@@ -129,6 +158,10 @@ export default function TaskManager() {
         </div>
         
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, position: 'relative', minWidth: '180px' }}>
+            <Calendar size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '16px' }} />
+            <input type="datetime-local" className="input-field select-field" style={{ paddingLeft: '2.5rem', cursor: 'pointer', color: dueDate ? 'var(--text-main)' : 'var(--text-muted)' }} value={dueDate} onChange={e => setDueDate(e.target.value)} />
+          </div>
           <select 
             className="input-field select-field" style={{ flex: 1, minWidth: '140px', cursor: 'pointer' }}
             value={category} onChange={e => setCategory(e.target.value)}
@@ -190,8 +223,27 @@ export default function TaskManager() {
                     <span className={`badge priority-${task.priority}`}>
                       {task.priority === 'high' ? 'High' : task.priority === 'medium' ? 'Medium' : 'Low'}
                     </span>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500, marginLeft: 'auto' }}>
-                      {new Date(task.created_at || Date.now()).toLocaleDateString()} {new Date(task.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500, marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      {editingDueDateId === task.id ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: '#111116', padding: '0.2rem 0.4rem', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
+                          <input type="datetime-local" style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', outline: 'none', fontSize: '0.8rem' }} value={editingDueDateVal} onChange={(e) => setEditingDueDateVal(e.target.value)} autoFocus />
+                          <button onClick={(e) => { e.stopPropagation(); updateDueDate(task.id, editingDueDateVal || null); }} style={{ background: 'rgba(147, 197, 253, 0.1)', color: 'var(--pastel-blue)', border: '1px solid rgba(147, 197, 253, 0.3)', borderRadius: '4px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 'bold' }}>Save</button>
+                          <button onClick={(e) => { e.stopPropagation(); setEditingDueDateId(null); setEditingDueDateVal(''); }} style={{ background: 'transparent', color: 'var(--danger)', border: 'none', cursor: 'pointer', display: 'flex' }}><X size={14} /></button>
+                        </div>
+                      ) : (
+                        <div 
+                          onClick={(e) => { e.stopPropagation(); setEditingDueDateId(task.id); setEditingDueDateVal(task.due_date ? formatDatetimeForInput(task.due_date) : ''); }} 
+                          style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', padding: '0.2rem 0.5rem', borderRadius: '6px', background: task.due_date ? (new Date(task.due_date) < new Date() ? 'rgba(253, 164, 175, 0.15)' : 'rgba(147, 197, 253, 0.1)') : 'transparent', color: task.due_date ? (new Date(task.due_date) < new Date() ? '#fecdd3' : '#bfdbfe') : 'var(--text-muted)', border: '1px solid transparent', transition: 'all 0.2s' }}
+                          title="Click to edit due date"
+                          onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                          onMouseOut={(e) => e.currentTarget.style.background = task.due_date ? (new Date(task.due_date) < new Date() ? 'rgba(253, 164, 175, 0.1)' : 'rgba(147, 197, 253, 0.05)') : 'transparent'}
+                        >
+                          <Calendar size={14} />
+                          <span>{task.due_date ? `${new Date(task.due_date).toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} 마감` : '기한 지정'}</span>
+                        </div>
+                      )}
+                      <span style={{ color: 'var(--border-color)', margin: '0 0.2rem' }}>|</span>
+                      <span>작성: {new Date(task.created_at || Date.now()).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}</span>
                     </span>
                   </div>
                 </div>
