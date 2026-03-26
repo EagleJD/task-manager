@@ -2,8 +2,8 @@
 
 // seed → 고유 찢김 패턴 / color → 캐릭터별 아웃라인 색상
 const TORN_FILTERS = [
-  { id: 'torn-0', seed: 3,  color: '#c084fc' }, // 쿠로미 — 바이올렛
-  { id: 'torn-1', seed: 7,  color: '#fb7185' }, // 마이멜로디 — 코랄 핑크
+  { id: 'torn-0', seed: 3, color: '#c084fc' }, // 쿠로미 — 바이올렛
+  { id: 'torn-1', seed: 7, color: '#fb7185' }, // 마이멜로디 — 코랄 핑크
   { id: 'torn-2', seed: 13, color: '#fbbf24' }, // 폼폼푸린 — 앰버 골드
   { id: 'torn-3', seed: 19, color: '#38bdf8' }, // 시나모롤 — 스카이 블루
   { id: 'torn-4', seed: 29, color: '#f472b6' }, // 쿠로미b  — 핫 핑크
@@ -33,7 +33,7 @@ const CHARACTERS = [
     alt: '폼폼푸린',
     filterId: 'torn-2',
     style: { bottom: '-50px', left: '-45px', '--rotate': '13deg' },
-    size: 290,
+    size: 790,
   },
   {
     id: 'cinnamoroll-br',
@@ -41,7 +41,7 @@ const CHARACTERS = [
     alt: '시나모롤',
     filterId: 'torn-3',
     style: { bottom: '-35px', right: '-65px', '--rotate': '-14deg' },
-    size: 370,
+    size: 770,
   },
   {
     id: 'kuromi-rm',
@@ -83,7 +83,7 @@ export default function DiaryDecorations() {
               {/* 캐릭터 알파 팽창 → 테두리 영역 생성 */}
               <feMorphology
                 operator="dilate"
-                radius="7"
+                radius="3"
                 in="SourceAlpha"
                 result="expanded"
               />
@@ -92,7 +92,7 @@ export default function DiaryDecorations() {
               <feDisplacementMap
                 in="expanded"
                 in2="noise"
-                scale="10"
+                scale="20"
                 xChannelSelector="R"
                 yChannelSelector="G"
                 result="tornEdge"
@@ -110,7 +110,7 @@ export default function DiaryDecorations() {
               {/* 종이 grain 레이어 — 찢긴 테두리에 질감 추가 */}
               <feTurbulence
                 type="fractalNoise"
-                baseFrequency="0.7"
+                baseFrequency="2"
                 numOctaves="4"
                 seed={seed + 5}
                 result="grain"
