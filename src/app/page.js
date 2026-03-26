@@ -47,7 +47,6 @@ export default function Home() {
           <div className="pin pink" style={{ top: '-10px', left: '14%' }}></div>
           <div className="pin blue" style={{ top: '-10px', right: '14%' }}></div>
 
-          <p className="hero-kicker">Diary board for the day</p>
           <h1 className="hero-title">My Task Diary</h1>
         </section>
 

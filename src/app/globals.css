@@ -32,14 +32,12 @@ body {
   font-family: 'Gaegu', 'M PLUS Rounded 1c', sans-serif;
   color: var(--text-main);
   background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.96), transparent 26%),
-    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.45), transparent 18%),
     linear-gradient(180deg, rgba(251, 236, 242, 0.98), rgba(248, 230, 238, 0.97)),
     repeating-linear-gradient(
       transparent,
-      transparent 27px,
-      rgba(230, 190, 205, 0.18) 27px,
-      rgba(230, 190, 205, 0.18) 28px
+      transparent 29px,
+      rgba(205, 160, 182, 0.2) 29px,
+      rgba(205, 160, 182, 0.2) 31px
     );
 }
 
@@ -75,10 +73,10 @@ select {
     linear-gradient(180deg, rgba(255, 251, 252, 0.94), rgba(255, 244, 248, 0.95)),
     repeating-linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.05) 0,
-      rgba(255, 255, 255, 0.05) 34px,
-      rgba(145, 187, 232, 0.36) 34px,
-      rgba(145, 187, 232, 0.36) 36px
+      rgba(255, 255, 255, 0.12) 0,
+      rgba(255, 255, 255, 0.12) 31px,
+      rgba(125, 168, 220, 0.48) 31px,
+      rgba(125, 168, 220, 0.48) 33px
     ),
     linear-gradient(
       90deg,
@@ -109,10 +107,15 @@ select {
   z-index: 0;
   border-radius: 28px;
   background:
-    radial-gradient(circle at 8% 12%, rgba(255, 255, 255, 0.7) 0 1.5px, transparent 1.8px) 0 0 / 24px 24px,
-    radial-gradient(circle at 74% 36%, rgba(229, 189, 203, 0.24) 0 1.2px, transparent 1.5px) 0 0 / 19px 19px,
-    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
-  opacity: 0.85;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0)),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 31px,
+      rgba(119, 160, 214, 0.22) 31px,
+      rgba(119, 160, 214, 0.22) 32px
+    );
+  opacity: 0.78;
   pointer-events: none;
 }
 
@@ -166,8 +169,8 @@ select {
     repeating-linear-gradient(
       transparent,
       transparent 31px,
-      rgba(255, 170, 200, 0.12) 31px,
-      rgba(255, 170, 200, 0.12) 32px
+      rgba(125, 168, 220, 0.24) 31px,
+      rgba(125, 168, 220, 0.24) 33px
     );
 }
 
@@ -507,6 +510,7 @@ select {
 
 .input-field {
   width: 100%;
+  min-width: 0;
   padding: 0.75rem 1.25rem;
   border: 1.5px solid var(--border-color);
   border-radius: 12px;
@@ -639,6 +643,26 @@ select {
   font-weight: 500;
   line-height: 1.55;
   word-break: break-word;
+}
+
+.task-form-meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr) minmax(0, 1fr) minmax(120px, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.task-form-field {
+  position: relative;
+  min-width: 0;
+}
+
+.task-form-date input::-webkit-calendar-picker-indicator {
+  opacity: 0.9;
+}
+
+.task-form-submit {
+  width: 100%;
 }
 
 .badge {
@@ -796,5 +820,13 @@ select {
 
   .sticker-cloud {
     transform: translate(-50%, -50%) scale(0.82) !important;
+  }
+
+  .task-form-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .task-form-submit {
+    min-height: 3.25rem;
   }
 }

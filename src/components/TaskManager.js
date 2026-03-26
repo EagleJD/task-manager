@@ -435,8 +435,8 @@ export default function TaskManager() {
           />
         </div>
 
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, position: 'relative', minWidth: '160px' }}>
+        <div className="task-form-meta">
+          <div className="task-form-field task-form-date">
             <Calendar size={16} color="var(--pastel-pink)" style={{ position: 'absolute', left: '12px', top: '15px' }} />
             <input
               type="datetime-local"
@@ -449,7 +449,7 @@ export default function TaskManager() {
 
           <select
             className="input-field select-field"
-            style={{ flex: 1, minWidth: '110px', cursor: 'pointer' }}
+            style={{ cursor: 'pointer' }}
             value={category}
             onChange={(event) => setCategory(event.target.value)}
           >
@@ -462,7 +462,7 @@ export default function TaskManager() {
 
           <select
             className="input-field select-field"
-            style={{ flex: 1, minWidth: '100px', cursor: 'pointer' }}
+            style={{ cursor: 'pointer' }}
             value={priority}
             onChange={(event) => setPriority(event.target.value)}
           >
@@ -475,9 +475,8 @@ export default function TaskManager() {
 
           <button
             type="submit"
-            className="btn-primary"
+            className="btn-primary task-form-submit"
             disabled={!text.trim() || submitting}
-            style={{ flex: 1, minWidth: '120px' }}
           >
             {submitting ? <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> : <Plus size={20} />}
             태스크 추가
