@@ -117,8 +117,8 @@ export default function TaskManager() {
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '5rem', color: 'var(--text-muted)' }}>
-        <Loader2 size={40} style={{ margin: '0 auto', animation: 'spin 1s linear infinite', color: 'var(--pastel-blue)' }} />
-        <p style={{ marginTop: '1.5rem', fontSize: '1.1rem', fontWeight: 500 }}>Loading tasks...</p>
+        <Loader2 size={40} style={{ margin: '0 auto', animation: 'spin 1s linear infinite', color: 'var(--pastel-pink)' }} />
+        <p style={{ marginTop: '1.5rem', fontSize: '1.1rem', fontWeight: 500 }}>読み込み中... 🌸</p>
         <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -155,7 +155,7 @@ export default function TaskManager() {
     <div 
       key={task.id} 
       className={`pinned-panel task-item animate-item ${task.completed ? 'completed' : ''}`}
-      style={{ animationDelay: `${Math.min(idx * 0.05, 0.5)}s`, borderLeftColor: task.priority === 'high' ? 'var(--danger)' : task.priority === 'low' ? 'var(--success)' : 'var(--pastel-blue)', marginBottom: 0 }}
+      style={{ animationDelay: `${Math.min(idx * 0.05, 0.5)}s`, borderLeftColor: task.priority === 'high' ? 'var(--danger)' : task.priority === 'low' ? 'var(--success)' : 'var(--pastel-purple)', marginBottom: 0 }}
     >
       <div className="pin yellow" style={{ top: '-8px', left: '15px' }}></div>
       <div className="pin pink" style={{ top: '-8px', right: '15px' }}></div>
@@ -178,21 +178,21 @@ export default function TaskManager() {
             </span>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '0.4rem', marginLeft: 'auto' }}>
               {editingDueDateId === task.id ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: '#111116', padding: '0.2rem 0.4rem', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
-                  <input type="datetime-local" style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', outline: 'none', fontSize: '0.75rem' }} value={editingDueDateVal} onChange={(e) => setEditingDueDateVal(e.target.value)} autoFocus />
-                  <button onClick={(e) => { e.stopPropagation(); updateDueDate(task.id, editingDueDateVal || null); }} style={{ background: 'rgba(147, 197, 253, 0.1)', color: 'var(--pastel-blue)', border: '1px solid rgba(147, 197, 253, 0.3)', borderRadius: '4px', padding: '0.2rem 0.4rem', cursor: 'pointer', fontSize: '0.7rem', fontWeight: 'bold' }}>Save</button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: '#fff9fb', padding: '0.2rem 0.4rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                  <input type="datetime-local" style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', outline: 'none', fontSize: '0.75rem', colorScheme: 'light' }} value={editingDueDateVal} onChange={(e) => setEditingDueDateVal(e.target.value)} autoFocus />
+                  <button onClick={(e) => { e.stopPropagation(); updateDueDate(task.id, editingDueDateVal || null); }} style={{ background: 'rgba(255, 179, 198, 0.15)', color: '#c05888', border: '1px solid rgba(255, 179, 198, 0.4)', borderRadius: '6px', padding: '0.2rem 0.5rem', cursor: 'pointer', fontSize: '0.7rem', fontWeight: 'bold', fontFamily: 'inherit' }}>保存 ✓</button>
                   <button onClick={(e) => { e.stopPropagation(); setEditingDueDateId(null); setEditingDueDateVal(''); }} style={{ background: 'transparent', color: 'var(--danger)', border: 'none', cursor: 'pointer', display: 'flex' }}><X size={12} /></button>
                 </div>
               ) : (
                 <div 
                   onClick={(e) => { e.stopPropagation(); setEditingDueDateId(task.id); setEditingDueDateVal(task.due_date ? formatDatetimeForInput(task.due_date) : ''); }} 
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', padding: '0.2rem 0.4rem', borderRadius: '6px', background: task.due_date ? (new Date(task.due_date) < new Date() ? 'rgba(253, 164, 175, 0.15)' : 'rgba(147, 197, 253, 0.1)') : 'transparent', color: task.due_date ? (new Date(task.due_date) < new Date() ? '#fecdd3' : '#bfdbfe') : 'var(--text-muted)', border: '1px solid transparent', transition: 'all 0.2s' }}
-                  title="Click to edit due date"
-                  onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                  onMouseOut={(e) => e.currentTarget.style.background = task.due_date ? (new Date(task.due_date) < new Date() ? 'rgba(253, 164, 175, 0.1)' : 'rgba(147, 197, 253, 0.05)') : 'transparent'}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', padding: '0.2rem 0.5rem', borderRadius: '8px', background: task.due_date ? (new Date(task.due_date) < new Date() ? 'rgba(255, 112, 150, 0.1)' : 'rgba(255, 179, 198, 0.12)') : 'transparent', color: task.due_date ? (new Date(task.due_date) < new Date() ? 'var(--danger)' : '#c05888') : 'var(--text-muted)', border: '1px solid transparent', transition: 'all 0.2s' }}
+                  title="クリックして期限を編集"
+                  onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255, 179, 198, 0.18)'}
+                  onMouseOut={(e) => e.currentTarget.style.background = task.due_date ? (new Date(task.due_date) < new Date() ? 'rgba(255, 112, 150, 0.1)' : 'rgba(255, 179, 198, 0.12)') : 'transparent'}
                 >
                   <Calendar size={12} />
-                  <span>{task.due_date ? `${new Date(task.due_date).toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}` : '기한 설정'}</span>
+                  <span>{task.due_date ? `${new Date(task.due_date).toLocaleString('ja-JP', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}` : '期限を設定 🗓️'}</span>
                 </div>
               )}
             </span>
@@ -220,8 +220,8 @@ export default function TaskManager() {
         <div className="pin pink" style={{ bottom: '-8px', right: '-8px' }}></div>
 
         {errorMsg && (
-          <div style={{ padding: '1rem', marginBottom: '1.5rem', background: 'rgba(253, 164, 175, 0.1)', color: 'var(--danger)', border: '1px solid rgba(253, 164, 175, 0.2)', borderRadius: '8px', fontSize: '0.95rem' }}>
-            <strong>Error:</strong> {errorMsg}
+          <div style={{ padding: '1rem', marginBottom: '1.5rem', background: 'rgba(255, 112, 150, 0.08)', color: 'var(--danger)', border: '1.5px solid rgba(255, 112, 150, 0.25)', borderRadius: '12px', fontSize: '0.95rem' }}>
+            <strong>ごめんね 🙈</strong>　{errorMsg}
           </div>
         )}
         
@@ -229,7 +229,7 @@ export default function TaskManager() {
           <input
             type="text"
             className="input-field"
-            placeholder="What needs to be done?"
+            placeholder="今日やること... 🌸"
             value={text}
             onChange={e => setText(e.target.value)}
             disabled={submitting}
@@ -239,30 +239,30 @@ export default function TaskManager() {
         
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ flex: 1, position: 'relative', minWidth: '160px' }}>
-            <Calendar size={16} color="var(--pastel-yellow)" style={{ position: 'absolute', left: '12px', top: '15px', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }} />
-            <input type="datetime-local" className="input-field select-field" style={{ paddingLeft: '2.5rem', cursor: 'pointer', color: dueDate ? 'var(--text-main)' : 'rgba(255,255,255,0.4)', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.15)' }} value={dueDate} onChange={e => setDueDate(e.target.value)} />
+            <Calendar size={16} color="var(--pastel-pink)" style={{ position: 'absolute', left: '12px', top: '15px' }} />
+            <input type="datetime-local" className="input-field select-field" style={{ paddingLeft: '2.5rem', cursor: 'pointer' }} value={dueDate} onChange={e => setDueDate(e.target.value)} />
           </div>
           <select 
             className="input-field select-field" style={{ flex: 1, minWidth: '90px', cursor: 'pointer' }}
             value={category} onChange={e => setCategory(e.target.value)}
           >
-            <option value="Work">Corporate</option>
-            <option value="Personal">Personal</option>
-            <option value="Study">Study</option>
+            <option value="Work">💼 お仕事</option>
+            <option value="Personal">🌷 プライベート</option>
+            <option value="Study">📚 勉強</option>
           </select>
           
           <select 
             className="input-field select-field" style={{ flex: 1, minWidth: '90px', cursor: 'pointer' }}
             value={priority} onChange={e => setPriority(e.target.value)}
           >
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
+            <option value="low">🍀 のんびり</option>
+            <option value="medium">✨ ふつう</option>
+            <option value="high">🌸 急いで！</option>
           </select>
           
           <button type="submit" className="btn-primary" disabled={!text.trim() || submitting} style={{ flex: 1, minWidth: '100px' }}>
             {submitting ? <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> : <Plus size={20} />}
-            Add Task
+            追加する ✨
           </button>
         </div>
       </form>
@@ -270,24 +270,24 @@ export default function TaskManager() {
       {tasks.length === 0 ? (
         <div className="pinned-panel animate-in" style={{ padding: '5rem 2rem', textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
           <div className="pin blue" style={{ top: '-8px', left: '50%', transform: 'translateX(-50%)' }}></div>
-          <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>📝</div>
-          <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>No tasks found</h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>Pin your first task to the board.</p>
+          <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>🌸</div>
+          <h3 style={{ fontSize: '1.5rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>まだタスクなし (´･ω･`)</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem' }}>最初のタスクを追加してね！✨</p>
         </div>
       ) : (
         <div className="kanban-board">
           <div className="kanban-col-wrapper">
-            <div className="col-header" style={{ color: 'var(--danger)' }}>🔥 High <span>{highTasks.length}</span></div>
+            <div className="col-header" style={{ color: 'var(--danger)' }}>🌸 急いで！<span>{highTasks.length}</span></div>
             <div className="kanban-col">{highTasks.map((task, idx) => renderTaskItem(task, idx))}</div>
           </div>
 
           <div className="kanban-col-wrapper">
-            <div className="col-header" style={{ color: 'var(--pastel-purple)' }}>⭐ Medium <span>{mediumTasks.length}</span></div>
+            <div className="col-header" style={{ color: '#9070c8' }}>✨ ふつう <span>{mediumTasks.length}</span></div>
             <div className="kanban-col">{mediumTasks.map((task, idx) => renderTaskItem(task, idx))}</div>
           </div>
 
           <div className="kanban-col-wrapper">
-            <div className="col-header" style={{ color: 'var(--success)' }}>🟢 Low <span>{lowTasks.length}</span></div>
+            <div className="col-header" style={{ color: 'var(--success)' }}>🍀 のんびり <span>{lowTasks.length}</span></div>
             <div className="kanban-col">{lowTasks.map((task, idx) => renderTaskItem(task, idx))}</div>
           </div>
         </div>
