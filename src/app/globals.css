@@ -64,7 +64,7 @@ select {
 
 .sticker-field {
   position: absolute;
-  inset: 0;
+  inset: 0 0 -220px;
   z-index: 1;
   min-height: 100%;
   overflow: hidden;

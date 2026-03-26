@@ -36,6 +36,7 @@ const SOURCES = [
 
 const DEFAULT_WIDTH = 1440;
 const DEFAULT_HEIGHT = 1900;
+const VERTICAL_OVERSCAN = 220;
 
 function createRandom(seed) {
   let state = seed % 2147483647;
@@ -67,35 +68,36 @@ function overlapsTooMuch(candidate, placed) {
     const overlapArea = overlapX * overlapY;
     const smallerArea = Math.min(candidate.size ** 2, sticker.size ** 2);
 
-    return overlapArea > smallerArea * 0.34;
+    return overlapArea > smallerArea * 0.46;
   });
 }
 
 function buildStickers(width, height) {
   const safeWidth = Math.max(width, 360);
-  const safeHeight = Math.max(height, 1200);
-  const bandCount = Math.max(7, Math.ceil(safeHeight / 260));
+  const safeHeight = Math.max(height + VERTICAL_OVERSCAN, 1400);
+  const bandCount = Math.max(9, Math.ceil(safeHeight / 185));
   const random = createRandom(Math.round(safeWidth + safeHeight + 52));
   const stickers = [];
 
   for (let bandIndex = 0; bandIndex < bandCount; bandIndex += 1) {
-    const yBase = ((bandIndex + 0.5) / bandCount) * safeHeight;
-    const clusterCount = Math.max(4, Math.round(safeWidth / 230) + ((bandIndex + 1) % 2));
+    const bandProgress = (bandIndex + 0.35) / Math.max(1, bandCount - 0.15);
+    const yBase = bandProgress * safeHeight;
+    const clusterCount = Math.max(5, Math.round(safeWidth / 165) + (bandIndex % 3));
 
     for (let clusterIndex = 0; clusterIndex < clusterCount; clusterIndex += 1) {
-      const centerX = ((clusterIndex + 0.5) / clusterCount) * safeWidth + (random() - 0.5) * 76;
-      const centerY = yBase + (random() - 0.5) * 90;
-      const stickerCount = 3 + Math.floor(random() * 3);
+      const centerX = ((clusterIndex + 0.5) / clusterCount) * safeWidth + (random() - 0.5) * 82;
+      const centerY = yBase + (random() - 0.5) * 96;
+      const stickerCount = 4 + Math.floor(random() * 3);
 
       for (let itemIndex = 0; itemIndex < stickerCount; itemIndex += 1) {
-        const size = 112 + Math.round((random() - 0.5) * 14);
+        const size = 110 + Math.round((random() - 0.5) * 16);
         const rotation = Math.round((random() - 0.5) * 30);
         let placedSticker = null;
 
-        for (let attempt = 0; attempt < 24; attempt += 1) {
-          const spread = 56 + random() * 18;
+        for (let attempt = 0; attempt < 32; attempt += 1) {
+          const spread = 52 + random() * 16;
           const left = clamp(centerX + (random() - 0.5) * spread * 2.1, size * 0.42, safeWidth - size * 0.42);
-          const top = clamp(centerY + (random() - 0.5) * spread * 2.1, size * 0.42, safeHeight - size * 0.42);
+          const top = clamp(centerY + (random() - 0.5) * spread * 2.1, size * 0.42, safeHeight - size * 0.16);
           const candidate = {
             src: SOURCES[
               (bandIndex * 13 + clusterIndex * 7 + itemIndex * 5 + Math.floor(random() * 17)) % SOURCES.length
@@ -111,8 +113,8 @@ function buildStickers(width, height) {
             break;
           }
 
-          if (attempt > 14) {
-            const relaxedCandidate = { ...candidate, size: size - 4 };
+          if (attempt > 18) {
+            const relaxedCandidate = { ...candidate, size: size - 3 };
             if (!overlapsTooMuch(relaxedCandidate, stickers)) {
               placedSticker = relaxedCandidate;
               break;
@@ -145,7 +147,14 @@ export default function KuromiStickers() {
     const updateStickers = () => {
       const wrapperRect = wrapper.getBoundingClientRect();
       const width = wrapperRect.width || window.innerWidth || DEFAULT_WIDTH;
-      const height = Math.max(wrapper.scrollHeight, wrapperRect.height, window.innerHeight, DEFAULT_HEIGHT);
+      const height = Math.max(
+        wrapper.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight,
+        wrapperRect.height,
+        window.innerHeight,
+        DEFAULT_HEIGHT
+      );
       setStickers(buildStickers(width, height));
     };
 
