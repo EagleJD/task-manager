@@ -1,14 +1,22 @@
 import { neon } from '@neondatabase/serverless';
 import { NextResponse } from 'next/server';
+import { normalizeCategory } from '@/lib/taskOptions';
 
 export const dynamic = 'force-dynamic';
+
+function shapeTask(task) {
+  return {
+    ...task,
+    category: normalizeCategory(task.category),
+  };
+}
 
 export async function GET() {
   try {
     const sql = neon(process.env.DATABASE_URL || process.env.POSTGRES_URL);
     await sql`ALTER TABLE tasks ADD COLUMN IF NOT EXISTS due_date TIMESTAMP WITH TIME ZONE;`;
     const rows = await sql`SELECT * FROM tasks ORDER BY position ASC, created_at DESC`;
-    return NextResponse.json(rows);
+    return NextResponse.json(rows.map(shapeTask));
   } catch (error) {
     if (error.message.includes('relation "tasks" does not exist') || error.message.includes('tasks" does not exist')) {
       const sql = neon(process.env.DATABASE_URL || process.env.POSTGRES_URL);
@@ -34,12 +42,13 @@ export async function POST(request) {
   try {
     const sql = neon(process.env.DATABASE_URL || process.env.POSTGRES_URL);
     const { text, category, priority, due_date } = await request.json();
+    const normalizedCategory = normalizeCategory(category);
     const rows = await sql`
       INSERT INTO tasks (text, category, priority, completed, position, due_date)
-      VALUES (${text}, ${category}, ${priority}, false, 0, ${due_date || null})
+      VALUES (${text}, ${normalizedCategory}, ${priority}, false, 0, ${due_date || null})
       RETURNING *
     `;
-    return NextResponse.json(rows[0]);
+    return NextResponse.json(shapeTask(rows[0]));
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
