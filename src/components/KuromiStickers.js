@@ -4,39 +4,39 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 const SOURCES = [
-  '/stickers/kuromi-01-01.png',
-  '/stickers/kuromi-01-01-glow.png',
-  '/stickers/kuromi-01-01-mirror.png',
-  '/stickers/kuromi-01-01-soft.png',
-  '/stickers/kuromi-02-01.png',
-  '/stickers/kuromi-02-01-glow.png',
-  '/stickers/kuromi-02-01-mirror.png',
-  '/stickers/kuromi-02-01-soft.png',
-  '/stickers/kuromi-03-01.png',
-  '/stickers/kuromi-03-01-glow.png',
-  '/stickers/kuromi-03-01-mirror.png',
-  '/stickers/kuromi-03-01-soft.png',
-  '/stickers/kuromi-04-01.png',
-  '/stickers/kuromi-04-01-glow.png',
-  '/stickers/kuromi-04-01-mirror.png',
-  '/stickers/kuromi-04-01-soft.png',
-  '/stickers/kuromi-05-01.png',
-  '/stickers/kuromi-05-01-glow.png',
-  '/stickers/kuromi-05-01-mirror.png',
-  '/stickers/kuromi-05-01-soft.png',
-  '/stickers/kuromi-06-01.png',
-  '/stickers/kuromi-06-01-glow.png',
-  '/stickers/kuromi-06-01-mirror.png',
-  '/stickers/kuromi-06-01-soft.png',
-  '/stickers/kuromi-07-01.png',
-  '/stickers/kuromi-07-01-glow.png',
-  '/stickers/kuromi-07-01-mirror.png',
-  '/stickers/kuromi-07-01-soft.png',
-  '/stickers/badtzmaru-01.webp',
-  '/stickers/badtzmaru-02.png',
-  '/stickers/gudetama-01.webp',
-  '/stickers/gudetama-02.webp',
-  '/stickers/gudetama-03.webp',
+  { src: '/stickers/kuromi-01-01.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-01-01-glow.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-01-01-mirror.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-01-01-soft.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-02-01.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-02-01-glow.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-02-01-mirror.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-02-01-soft.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-03-01.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-03-01-glow.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-03-01-mirror.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-03-01-soft.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-04-01.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-04-01-glow.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-04-01-mirror.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-04-01-soft.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-05-01.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-05-01-glow.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-05-01-mirror.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-05-01-soft.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-06-01.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-06-01-glow.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-06-01-mirror.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-06-01-soft.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-07-01.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-07-01-glow.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-07-01-mirror.png', width: 560, height: 560 },
+  { src: '/stickers/kuromi-07-01-soft.png', width: 560, height: 560 },
+  { src: '/stickers/badtzmaru-01.webp', width: 560, height: 560 },
+  { src: '/stickers/badtzmaru-02.png', width: 540, height: 360 },
+  { src: '/stickers/gudetama-01.webp', width: 1004, height: 560 },
+  { src: '/stickers/gudetama-02.webp', width: 404, height: 348 },
+  { src: '/stickers/gudetama-03.webp', width: 512, height: 512 },
 ];
 
 const DEFAULT_WIDTH = 1440;
@@ -103,10 +103,11 @@ function buildStickers(width, height) {
           const spread = 52 + random() * 16;
           const left = clamp(centerX + (random() - 0.5) * spread * 2.1, size * 0.42, safeWidth - size * 0.42);
           const top = clamp(centerY + (random() - 0.5) * spread * 2.1, size * 0.42, safeHeight - size * 0.16);
+          const source = SOURCES[
+            (bandIndex * 13 + clusterIndex * 7 + itemIndex * 5 + Math.floor(random() * 17)) % SOURCES.length
+          ];
           const candidate = {
-            src: SOURCES[
-              (bandIndex * 13 + clusterIndex * 7 + itemIndex * 5 + Math.floor(random() * 17)) % SOURCES.length
-            ],
+            ...source,
             left,
             top,
             size,
@@ -212,22 +213,22 @@ export default function KuromiStickers() {
             top: `${sticker.top}px`,
             left: `${sticker.left}px`,
             opacity: 1,
-            zIndex: 1 + (index % 4),
+            zIndex: 1,
             transform: `translate(-50%, -50%) rotate(${sticker.rotation})`,
           }}
         >
           <Image
             src={sticker.src}
             alt=""
-            width={sticker.size}
-            height={sticker.size}
+            width={sticker.width}
+            height={sticker.height}
             sizes={`${sticker.size}px`}
             draggable={false}
             style={{
               display: 'block',
               width: sticker.size,
-              height: sticker.size,
-              filter: 'url(#ks-white) drop-shadow(0 10px 18px rgba(78, 46, 96, 0.18))',
+              height: 'auto',
+              filter: 'url(#ks-white)',
             }}
           />
         </div>
