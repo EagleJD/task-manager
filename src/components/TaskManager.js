@@ -111,7 +111,7 @@ export default function TaskManager() {
         <div className="pin pink" style={{ bottom: '-8px', right: '-8px' }}></div>
 
         {errorMsg && (
-          <div style={{ padding: '1rem', marginBottom: '1.5rem', background: '#fef2f2', color: '#b91c1c', border: '1px solid #fca5a5', borderRadius: '8px', fontSize: '0.95rem' }}>
+          <div style={{ padding: '1rem', marginBottom: '1.5rem', background: 'rgba(253, 164, 175, 0.1)', color: 'var(--danger)', border: '1px solid rgba(253, 164, 175, 0.2)', borderRadius: '8px', fontSize: '0.95rem' }}>
             <strong>Error:</strong> {errorMsg}
           </div>
         )}
