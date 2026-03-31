@@ -1,7 +1,7 @@
 export const TASK_CATEGORIES = [
-  { value: 'work', label: 'Work' },
-  { value: 'personal', label: 'Personal' },
-  { value: 'study', label: 'Study' },
+  { value: 'work',     label: '업무' },
+  { value: 'personal', label: '개인' },
+  { value: 'study',    label: '공부' },
 ];
 
 export const CATEGORY_LABELS = Object.fromEntries(

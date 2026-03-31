@@ -6,6 +6,7 @@
 |---|---|---|
 | 2026-03-31 | 문서 최초 작성. Next.js, Neon, Vercel, Sharp, Lucide, Google Fonts 정리 | 프로젝트 서비스 현황 문서화 |
 | 2026-03-31 | `jose`, `bcryptjs` 추가 | 로그인 시스템 구현 |
+| 2026-03-31 | 스티커 캐릭터 추가 가이드 정비 (My Melody, Cinnamoroll, Little Twin Stars, Pompompurin 추천) | 파스텔 테마 캐릭터 확장 방향 문서화 |
 
 ## 현재 사용 중인 서비스
 

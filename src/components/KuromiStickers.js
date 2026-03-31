@@ -3,10 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
-// Kuromi only — consistent with the app theme.
-// Original + mirror pairs give natural left/right variety without visual clutter.
-// Glow/soft duplicates and guest characters (Badtz-Maru, Gudetama) removed:
-// they broke Gestalt similarity (thematic inconsistency) and added noise.
+// Sticker sources — currently Kuromi original + mirror pairs.
+// To add characters: save PNG to public/stickers/ and append { src, w, h } below.
+// Recommended additions for pastel pink/purple background:
+//   My Melody    — pink, same Sanrio world as Kuromi
+//   Cinnamoroll  — white/sky blue, high contrast on pastel
+//   Little Twin Stars (Kiki & Lala) — pastel purple/pink, direct palette match
+//   Pompompurin  — yellow, accent color in pastel palette
 const SOURCES = [
   { src: '/stickers/kuromi-01-01.png',        w: 560, h: 560 },
   { src: '/stickers/kuromi-01-01-mirror.png', w: 560, h: 560 },
@@ -48,47 +51,57 @@ function createRandom(seed) {
 //   sizeMin/Max — rendered pixel size range
 function getZones(width, height) {
   if (width < 768) {
-    // Mobile: 4 corner zones, dense enough to read as a sticker diary
+    // Mobile: 4 corner zones — spread increased so stickers breathe
     return [
-      { cx: width * 0.13, cy: 190,            count: 5, spread: 64, sizeMin: 72, sizeMax: 96  },
-      { cx: width * 0.87, cy: 190,            count: 5, spread: 64, sizeMin: 72, sizeMax: 96  },
-      { cx: width * 0.13, cy: height * 0.80,  count: 4, spread: 60, sizeMin: 70, sizeMax: 90  },
-      { cx: width * 0.87, cy: height * 0.80,  count: 4, spread: 60, sizeMin: 70, sizeMax: 90  },
+      { cx: width * 0.13, cy: 190,            count: 3, spread: 110, sizeMin: 72, sizeMax: 92  },
+      { cx: width * 0.87, cy: 190,            count: 3, spread: 110, sizeMin: 72, sizeMax: 92  },
+      { cx: width * 0.13, cy: height * 0.80,  count: 2, spread: 100, sizeMin: 70, sizeMax: 88  },
+      { cx: width * 0.87, cy: height * 0.80,  count: 2, spread: 100, sizeMin: 70, sizeMax: 88  },
     ];
   }
 
   if (width < 1100) {
-    // Tablet: 6 edge clusters — generous overlap encouraged
+    // Tablet: 6 edge clusters — spread widened for 70%+ non-overlap
     return [
-      { cx: width * 0.07, cy: 200,            count: 6, spread: 72, sizeMin: 80, sizeMax: 108 },
-      { cx: width * 0.93, cy: 200,            count: 6, spread: 72, sizeMin: 80, sizeMax: 108 },
-      { cx: width * 0.05, cy: height * 0.44,  count: 6, spread: 68, sizeMin: 80, sizeMax: 106 },
-      { cx: width * 0.95, cy: height * 0.44,  count: 6, spread: 68, sizeMin: 80, sizeMax: 106 },
-      { cx: width * 0.10, cy: height * 0.80,  count: 5, spread: 70, sizeMin: 78, sizeMax: 100 },
-      { cx: width * 0.90, cy: height * 0.80,  count: 5, spread: 70, sizeMin: 78, sizeMax: 100 },
+      { cx: width * 0.07, cy: 200,            count: 4, spread: 150, sizeMin: 80, sizeMax: 104 },
+      { cx: width * 0.93, cy: 200,            count: 4, spread: 150, sizeMin: 80, sizeMax: 104 },
+      { cx: width * 0.05, cy: height * 0.44,  count: 4, spread: 145, sizeMin: 80, sizeMax: 102 },
+      { cx: width * 0.95, cy: height * 0.44,  count: 4, spread: 145, sizeMin: 80, sizeMax: 102 },
+      { cx: width * 0.10, cy: height * 0.80,  count: 3, spread: 140, sizeMin: 78, sizeMax: 98  },
+      { cx: width * 0.90, cy: height * 0.80,  count: 3, spread: 140, sizeMin: 78, sizeMax: 98  },
     ];
   }
 
-  // Desktop: 10 clusters, 7–8 stickers each → ~74 total.
-  // Bold density makes the diary-sticker aesthetic unmistakable.
-  // Bilateral symmetry (Gestalt balance) keeps it feeling orderly despite density.
+  // Desktop: 10 clusters, 4–5 stickers each → ~45 total.
+  // Spread doubled vs previous so stickers are clearly distinct.
+  // Bilateral symmetry (Gestalt balance) keeps it orderly while feeling playful.
   return [
     // Top corners — large anchors
-    { cx: width * 0.07,  cy: 170,            count: 8, spread: 80, sizeMin: 88, sizeMax: 128 },
-    { cx: width * 0.93,  cy: 170,            count: 8, spread: 80, sizeMin: 88, sizeMax: 128 },
+    { cx: width * 0.07,  cy: 170,            count: 5, spread: 200, sizeMin: 88, sizeMax: 124 },
+    { cx: width * 0.93,  cy: 170,            count: 5, spread: 200, sizeMin: 88, sizeMax: 124 },
     // Upper flanks (flanking the hero)
-    { cx: width * 0.15,  cy: 380,            count: 7, spread: 74, sizeMin: 84, sizeMax: 116 },
-    { cx: width * 0.85,  cy: 380,            count: 7, spread: 74, sizeMin: 84, sizeMax: 116 },
+    { cx: width * 0.15,  cy: 380,            count: 4, spread: 180, sizeMin: 84, sizeMax: 112 },
+    { cx: width * 0.85,  cy: 380,            count: 4, spread: 180, sizeMin: 84, sizeMax: 112 },
     // Mid flanks (flanking the kanban board)
-    { cx: width * 0.06,  cy: height * 0.42,  count: 8, spread: 76, sizeMin: 90, sizeMax: 124 },
-    { cx: width * 0.94,  cy: height * 0.42,  count: 8, spread: 76, sizeMin: 90, sizeMax: 124 },
+    { cx: width * 0.06,  cy: height * 0.42,  count: 5, spread: 200, sizeMin: 88, sizeMax: 120 },
+    { cx: width * 0.94,  cy: height * 0.42,  count: 5, spread: 200, sizeMin: 88, sizeMax: 120 },
     // Lower flanks
-    { cx: width * 0.11,  cy: height * 0.72,  count: 7, spread: 72, sizeMin: 84, sizeMax: 116 },
-    { cx: width * 0.89,  cy: height * 0.72,  count: 7, spread: 72, sizeMin: 84, sizeMax: 116 },
+    { cx: width * 0.11,  cy: height * 0.72,  count: 4, spread: 185, sizeMin: 84, sizeMax: 112 },
+    { cx: width * 0.89,  cy: height * 0.72,  count: 4, spread: 185, sizeMin: 84, sizeMax: 112 },
     // Bottom edge
-    { cx: width * 0.22,  cy: height * 0.93,  count: 6, spread: 78, sizeMin: 80, sizeMax: 108 },
-    { cx: width * 0.78,  cy: height * 0.93,  count: 6, spread: 78, sizeMin: 80, sizeMax: 108 },
+    { cx: width * 0.22,  cy: height * 0.93,  count: 4, spread: 190, sizeMin: 80, sizeMax: 104 },
+    { cx: width * 0.78,  cy: height * 0.93,  count: 4, spread: 190, sizeMin: 80, sizeMax: 104 },
   ];
+}
+
+// Fisher-Yates shuffle using the seeded PRNG — preserves SSR/CSR consistency.
+function shuffleSources(arr, random) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
 function buildStickers(width, height) {
@@ -98,7 +111,11 @@ function buildStickers(width, height) {
   const zones  = getZones(safeW, safeH);
   const stickers = [];
 
-  zones.forEach((zone, zoneIdx) => {
+  zones.forEach((zone) => {
+    // Shuffle sources per zone so no image repeats within a cluster.
+    // If count > SOURCES.length, the cycle restarts from a new shuffle.
+    const pool = shuffleSources(SOURCES, random);
+
     for (let i = 0; i < zone.count; i++) {
       const size     = zone.sizeMin + Math.round(random() * (zone.sizeMax - zone.sizeMin));
       const rotation = Math.round((random() - 0.5) * 28); // ±14°
@@ -106,8 +123,7 @@ function buildStickers(width, height) {
                          zone.cx + (random() - 0.5) * zone.spread * 2));
       const top      = Math.max(size * 0.5, Math.min(safeH - size * 0.3,
                          zone.cy + (random() - 0.5) * zone.spread * 2));
-      // Cycle through all 14 sources evenly across zones
-      const source   = SOURCES[Math.floor(random() * SOURCES.length)];
+      const source   = pool[i % pool.length];
       // Opacity variation (0.55–0.80): enough presence to read as decorative
       // diary stickers, still receding behind main content.
       const opacity  = 0.55 + random() * 0.25;

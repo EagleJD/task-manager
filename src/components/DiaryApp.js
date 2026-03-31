@@ -6,9 +6,9 @@ import TaskManager from './TaskManager';
 import { normalizeCategory } from '@/lib/taskOptions';
 
 const BOOKMARKS = [
-  { key: 'work',     label: 'WORK',  sublabel: '업무', colorClass: 'blue',   tilt: '-4deg' },
-  { key: 'personal', label: '개인',   sublabel: '일상', colorClass: 'pink',   tilt:  '2deg' },
-  { key: 'study',    label: '공부',   sublabel: '학습', colorClass: 'yellow', tilt:  '5deg' },
+  { key: 'work',     label: '업무', sublabel: '일과', colorClass: 'blue',   tilt: '-4deg' },
+  { key: 'personal', label: '개인', sublabel: '일상', colorClass: 'pink',   tilt:  '2deg' },
+  { key: 'study',    label: '공부', sublabel: '학습', colorClass: 'yellow', tilt:  '5deg' },
 ];
 
 export default function DiaryApp() {
