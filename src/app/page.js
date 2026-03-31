@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import TaskManager from '@/components/TaskManager';
 import KuromiStickers from '@/components/KuromiStickers';
 
@@ -47,7 +48,16 @@ export default function Home() {
           <div className="pin pink" style={{ top: '-10px', left: '14%' }}></div>
           <div className="pin blue" style={{ top: '-10px', right: '14%' }}></div>
 
-          <h1 className="hero-title">My Task Diary</h1>
+          <h1 className="hero-title">
+            <Image
+              src="/hero-title.png"
+              alt="My Task Diary"
+              width={1200}
+              height={675}
+              priority
+              style={{ width: '100%', height: 'auto' }}
+            />
+          </h1>
         </section>
 
         <main>

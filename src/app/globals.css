@@ -336,34 +336,11 @@ select {
 }
 
 .hero-title {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 0.9rem;
-  padding: 0 1rem 0.7rem;
-  font-family: 'Gaegu', 'M PLUS Rounded 1c', sans-serif;
-  font-size: clamp(2.2rem, 5vw, 3.5rem);
-  line-height: 1.05;
-  letter-spacing: 0.01em;
-  background-image: linear-gradient(transparent 78%, rgba(255, 216, 129, 0.85) 78%, rgba(255, 216, 129, 0.85) 92%, transparent 92%);
-}
-
-.hero-title::before,
-.hero-title::after {
-  position: absolute;
-  color: rgba(255, 137, 178, 0.78);
-  font-size: 1rem;
-}
-
-.hero-title::before {
-  content: '✦';
-  left: 0;
-  top: -0.1rem;
-}
-
-.hero-title::after {
-  content: '✦';
-  right: 0.1rem;
-  bottom: 0.55rem;
+  display: block;
+  margin: 0 auto 0.5rem;
+  max-width: 640px;
+  padding: 0;
+  line-height: 1;
 }
 
 .pinned-panel {

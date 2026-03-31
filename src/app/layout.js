@@ -1,6 +1,9 @@
 import './globals.css';
 
 export const metadata = {
+  metadataBase: new URL(
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  ),
   title: 'My Task Diary',
   description: '쿠로미 스티커와 다이어리 감성으로 꾸민 태스크 매니저',
   openGraph: {
