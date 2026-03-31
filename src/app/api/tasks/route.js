@@ -1,26 +1,14 @@
-import { neon } from '@neondatabase/serverless';
 import { NextResponse } from 'next/server';
 import { normalizeCategory } from '@/lib/taskOptions';
+import { getSql, DATABASE_ERROR_MESSAGE } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
-const DATABASE_ERROR_MESSAGE =
-  'DATABASE_URL 또는 POSTGRES_URL 환경변수가 설정되지 않았습니다. .env.local에 Neon 연결 문자열을 추가해 주세요.';
 
 function shapeTask(task) {
   return {
     ...task,
     category: normalizeCategory(task.category),
   };
-}
-
-function getSql() {
-  const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
-
-  if (!connectionString) {
-    return null;
-  }
-
-  return neon(connectionString);
 }
 
 export async function GET() {
