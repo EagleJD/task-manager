@@ -167,7 +167,6 @@ select {
 .sticker-cloud {
   position: absolute;
   user-select: none;
-  will-change: transform;
 }
 
 .top-bookmarks {
@@ -768,10 +767,8 @@ select {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .sticker-cloud {
-    transform: translate(-50%, -50%) scale(0.92) !important;
-  }
 }
+
 
 @media (max-width: 900px) {
   .container {
@@ -858,10 +855,6 @@ select {
 
   .bookmark-sublabel {
     display: none;
-  }
-
-  .sticker-cloud {
-    transform: translate(-50%, -50%) scale(0.82) !important;
   }
 
   .task-form-meta {

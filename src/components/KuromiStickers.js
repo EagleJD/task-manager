@@ -3,137 +3,118 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
+// Kuromi only — consistent with the app theme.
+// Original + mirror pairs give natural left/right variety without visual clutter.
+// Glow/soft duplicates and guest characters (Badtz-Maru, Gudetama) removed:
+// they broke Gestalt similarity (thematic inconsistency) and added noise.
 const SOURCES = [
-  { src: '/stickers/kuromi-01-01.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-01-01-glow.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-01-01-mirror.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-01-01-soft.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-02-01.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-02-01-glow.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-02-01-mirror.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-02-01-soft.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-03-01.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-03-01-glow.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-03-01-mirror.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-03-01-soft.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-04-01.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-04-01-glow.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-04-01-mirror.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-04-01-soft.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-05-01.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-05-01-glow.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-05-01-mirror.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-05-01-soft.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-06-01.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-06-01-glow.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-06-01-mirror.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-06-01-soft.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-07-01.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-07-01-glow.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-07-01-mirror.png', width: 560, height: 560 },
-  { src: '/stickers/kuromi-07-01-soft.png', width: 560, height: 560 },
-  { src: '/stickers/badtzmaru-01.webp', width: 560, height: 560 },
-  { src: '/stickers/badtzmaru-02.png', width: 540, height: 360 },
-  { src: '/stickers/gudetama-01.webp', width: 1004, height: 560 },
-  { src: '/stickers/gudetama-02.webp', width: 404, height: 348 },
-  { src: '/stickers/gudetama-03.webp', width: 512, height: 512 },
+  { src: '/stickers/kuromi-01-01.png',        w: 560, h: 560 },
+  { src: '/stickers/kuromi-01-01-mirror.png', w: 560, h: 560 },
+  { src: '/stickers/kuromi-02-01.png',        w: 560, h: 560 },
+  { src: '/stickers/kuromi-02-01-mirror.png', w: 560, h: 560 },
+  { src: '/stickers/kuromi-03-01.png',        w: 560, h: 560 },
+  { src: '/stickers/kuromi-03-01-mirror.png', w: 560, h: 560 },
+  { src: '/stickers/kuromi-04-01.png',        w: 560, h: 560 },
+  { src: '/stickers/kuromi-04-01-mirror.png', w: 560, h: 560 },
+  { src: '/stickers/kuromi-05-01.png',        w: 560, h: 560 },
+  { src: '/stickers/kuromi-05-01-mirror.png', w: 560, h: 560 },
+  { src: '/stickers/kuromi-06-01.png',        w: 560, h: 560 },
+  { src: '/stickers/kuromi-06-01-mirror.png', w: 560, h: 560 },
+  { src: '/stickers/kuromi-07-01.png',        w: 560, h: 560 },
+  { src: '/stickers/kuromi-07-01-mirror.png', w: 560, h: 560 },
 ];
 
-const DEFAULT_WIDTH = 1440;
+const DEFAULT_WIDTH  = 1440;
 const DEFAULT_HEIGHT = 1900;
-const VERTICAL_OVERSCAN = 220;
 
 function createRandom(seed) {
   let state = seed % 2147483647;
   if (state <= 0) state += 2147483646;
-
   return () => {
     state = (state * 16807) % 2147483647;
     return (state - 1) / 2147483646;
   };
 }
 
-function clamp(value, min, max) {
-  return Math.min(max, Math.max(min, value));
-}
+// Zone-based layout: stickers anchor to the decorative margins and edges,
+// leaving the central content area (hero + kanban) unobstructed.
+// This mirrors how real diary stickers are placed — corners and edges,
+// not scattered uniformly across the page.
+//
+// Each zone: { cx, cy, count, spread, sizeMin, sizeMax }
+//   cx/cy    — cluster anchor point
+//   count    — stickers per cluster
+//   spread   — scatter radius (px)
+//   sizeMin/Max — rendered pixel size range
+function getZones(width, height) {
+  if (width < 768) {
+    // Mobile: 4 corner anchors only — minimal, non-obstructive
+    return [
+      { cx: width * 0.13, cy: 190,            count: 2, spread: 50, sizeMin: 72, sizeMax: 88 },
+      { cx: width * 0.87, cy: 190,            count: 2, spread: 50, sizeMin: 72, sizeMax: 88 },
+      { cx: width * 0.13, cy: height * 0.82,  count: 2, spread: 50, sizeMin: 70, sizeMax: 84 },
+      { cx: width * 0.87, cy: height * 0.82,  count: 2, spread: 50, sizeMin: 70, sizeMax: 84 },
+    ];
+  }
 
-function overlapsTooMuch(candidate, placed) {
-  return placed.some((sticker) => {
-    const overlapX =
-      Math.min(candidate.left + candidate.size / 2, sticker.left + sticker.size / 2) -
-      Math.max(candidate.left - candidate.size / 2, sticker.left - sticker.size / 2);
-    const overlapY =
-      Math.min(candidate.top + candidate.size / 2, sticker.top + sticker.size / 2) -
-      Math.max(candidate.top - candidate.size / 2, sticker.top - sticker.size / 2);
+  if (width < 1100) {
+    // Tablet: 6 edge clusters
+    return [
+      { cx: width * 0.07, cy: 200,            count: 3, spread: 60, sizeMin: 78, sizeMax: 96  },
+      { cx: width * 0.93, cy: 200,            count: 3, spread: 60, sizeMin: 78, sizeMax: 96  },
+      { cx: width * 0.05, cy: height * 0.44,  count: 3, spread: 56, sizeMin: 78, sizeMax: 94  },
+      { cx: width * 0.95, cy: height * 0.44,  count: 3, spread: 56, sizeMin: 78, sizeMax: 94  },
+      { cx: width * 0.10, cy: height * 0.82,  count: 2, spread: 58, sizeMin: 76, sizeMax: 90  },
+      { cx: width * 0.90, cy: height * 0.82,  count: 2, spread: 58, sizeMin: 76, sizeMax: 90  },
+    ];
+  }
 
-    if (overlapX <= 0 || overlapY <= 0) {
-      return false;
-    }
-
-    const overlapArea = overlapX * overlapY;
-    const smallerArea = Math.min(candidate.size ** 2, sticker.size ** 2);
-
-    return overlapArea > smallerArea * 0.46;
-  });
+  // Desktop: 10 clusters anchored to the margins and vertical edges.
+  // Left/right pairs mirror each other for bilateral symmetry — a Gestalt
+  // balance principle that reads as orderly even while feeling playful.
+  return [
+    // Top corners
+    { cx: width * 0.07,  cy: 170,            count: 3, spread: 66, sizeMin: 84, sizeMax: 104 },
+    { cx: width * 0.93,  cy: 170,            count: 3, spread: 66, sizeMin: 84, sizeMax: 104 },
+    // Upper flanks (flanking the hero)
+    { cx: width * 0.16,  cy: 360,            count: 3, spread: 60, sizeMin: 80, sizeMax: 98  },
+    { cx: width * 0.84,  cy: 360,            count: 3, spread: 60, sizeMin: 80, sizeMax: 98  },
+    // Mid flanks (flanking the kanban board)
+    { cx: width * 0.06,  cy: height * 0.42,  count: 3, spread: 62, sizeMin: 86, sizeMax: 104 },
+    { cx: width * 0.94,  cy: height * 0.42,  count: 3, spread: 62, sizeMin: 86, sizeMax: 104 },
+    // Lower flanks
+    { cx: width * 0.11,  cy: height * 0.72,  count: 3, spread: 60, sizeMin: 80, sizeMax: 98  },
+    { cx: width * 0.89,  cy: height * 0.72,  count: 3, spread: 60, sizeMin: 80, sizeMax: 98  },
+    // Bottom edge
+    { cx: width * 0.24,  cy: height * 0.93,  count: 2, spread: 64, sizeMin: 76, sizeMax: 92  },
+    { cx: width * 0.76,  cy: height * 0.93,  count: 2, spread: 64, sizeMin: 76, sizeMax: 92  },
+  ];
 }
 
 function buildStickers(width, height) {
-  const safeWidth = Math.max(width, 360);
-  const safeHeight = Math.max(height + VERTICAL_OVERSCAN, 1400);
-  const bandCount = Math.max(9, Math.ceil(safeHeight / 185));
-  const random = createRandom(Math.round(safeWidth + safeHeight + 52));
+  const safeW = Math.max(width, 360);
+  const safeH = Math.max(height, 1400);
+  const random = createRandom(Math.round(safeW * 3 + safeH * 7 + 42));
+  const zones  = getZones(safeW, safeH);
   const stickers = [];
 
-  for (let bandIndex = 0; bandIndex < bandCount; bandIndex += 1) {
-    const bandProgress = (bandIndex + 0.35) / Math.max(1, bandCount - 0.15);
-    const yBase = bandProgress * safeHeight;
-    const clusterCount = Math.max(5, Math.round(safeWidth / 165) + (bandIndex % 3));
+  zones.forEach((zone, zoneIdx) => {
+    for (let i = 0; i < zone.count; i++) {
+      const size     = zone.sizeMin + Math.round(random() * (zone.sizeMax - zone.sizeMin));
+      const rotation = Math.round((random() - 0.5) * 28); // ±14°
+      const left     = Math.max(size * 0.5, Math.min(safeW - size * 0.5,
+                         zone.cx + (random() - 0.5) * zone.spread * 2));
+      const top      = Math.max(size * 0.5, Math.min(safeH - size * 0.3,
+                         zone.cy + (random() - 0.5) * zone.spread * 2));
+      // Cycle through all 14 sources evenly across zones
+      const source   = SOURCES[Math.floor(random() * SOURCES.length)];
+      // Subtle opacity variation (0.5–0.7) creates natural depth:
+      // stickers recede behind content without disappearing.
+      const opacity  = 0.50 + random() * 0.20;
 
-    for (let clusterIndex = 0; clusterIndex < clusterCount; clusterIndex += 1) {
-      const centerX = ((clusterIndex + 0.5) / clusterCount) * safeWidth + (random() - 0.5) * 82;
-      const centerY = yBase + (random() - 0.5) * 96;
-      const stickerCount = 4 + Math.floor(random() * 3);
-
-      for (let itemIndex = 0; itemIndex < stickerCount; itemIndex += 1) {
-        const size = 110 + Math.round((random() - 0.5) * 16);
-        const rotation = Math.round((random() - 0.5) * 30);
-        let placedSticker = null;
-
-        for (let attempt = 0; attempt < 32; attempt += 1) {
-          const spread = 52 + random() * 16;
-          const left = clamp(centerX + (random() - 0.5) * spread * 2.1, size * 0.42, safeWidth - size * 0.42);
-          const top = clamp(centerY + (random() - 0.5) * spread * 2.1, size * 0.42, safeHeight - size * 0.16);
-          const source = SOURCES[
-            (bandIndex * 13 + clusterIndex * 7 + itemIndex * 5 + Math.floor(random() * 17)) % SOURCES.length
-          ];
-          const candidate = {
-            ...source,
-            left,
-            top,
-            size,
-            rotation: `${rotation}deg`,
-          };
-
-          if (!overlapsTooMuch(candidate, stickers)) {
-            placedSticker = candidate;
-            break;
-          }
-
-          if (attempt > 18) {
-            const relaxedCandidate = { ...candidate, size: size - 3 };
-            if (!overlapsTooMuch(relaxedCandidate, stickers)) {
-              placedSticker = relaxedCandidate;
-              break;
-            }
-          }
-        }
-
-        if (placedSticker) {
-          stickers.push(placedSticker);
-        }
-      }
+      stickers.push({ ...source, left, top, size, rotation: `${rotation}deg`, opacity });
     }
-  }
+  });
 
   return stickers;
 }
@@ -143,38 +124,28 @@ export default function KuromiStickers() {
   const [stickers, setStickers] = useState(() => buildStickers(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
   useEffect(() => {
-    const field = fieldRef.current;
+    const field   = fieldRef.current;
     const surface = field?.closest('.diary-surface');
 
-    if (!field || !surface) {
-      return undefined;
-    }
+    if (!field || !surface) return undefined;
 
-    const updateStickers = () => {
-      const surfaceRect = surface.getBoundingClientRect();
-      const width = surfaceRect.width || window.innerWidth || DEFAULT_WIDTH;
-      const height = Math.max(
-        surface.scrollHeight,
-        surfaceRect.height,
-        window.innerHeight,
-        DEFAULT_HEIGHT
-      );
+    const update = () => {
+      const rect   = surface.getBoundingClientRect();
+      const width  = rect.width || window.innerWidth || DEFAULT_WIDTH;
+      const height = Math.max(surface.scrollHeight, rect.height, window.innerHeight, DEFAULT_HEIGHT);
       setStickers(buildStickers(width, height));
     };
 
-    updateStickers();
+    update();
 
-    const resizeObserver = new ResizeObserver(() => {
-      updateStickers();
-    });
-
-    resizeObserver.observe(surface);
-    resizeObserver.observe(document.body);
-    window.addEventListener('resize', updateStickers);
+    const ro = new ResizeObserver(update);
+    ro.observe(surface);
+    ro.observe(document.body);
+    window.addEventListener('resize', update);
 
     return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener('resize', updateStickers);
+      ro.disconnect();
+      window.removeEventListener('resize', update);
     };
   }, []);
 
@@ -210,26 +181,21 @@ export default function KuromiStickers() {
           key={`${sticker.src}-${index}`}
           className="sticker-cloud"
           style={{
-            top: `${sticker.top}px`,
-            left: `${sticker.left}px`,
-            opacity: 1,
-            zIndex: 1,
+            top:       `${sticker.top}px`,
+            left:      `${sticker.left}px`,
+            opacity:   sticker.opacity,
+            zIndex:    1,
             transform: `translate(-50%, -50%) rotate(${sticker.rotation})`,
           }}
         >
           <Image
             src={sticker.src}
             alt=""
-            width={sticker.width}
-            height={sticker.height}
+            width={sticker.w}
+            height={sticker.h}
             sizes={`${sticker.size}px`}
             draggable={false}
-            style={{
-              display: 'block',
-              width: sticker.size,
-              height: 'auto',
-              filter: 'url(#ks-white)',
-            }}
+            style={{ display: 'block', width: sticker.size, height: 'auto', filter: 'url(#ks-white)' }}
           />
         </div>
       ))}
