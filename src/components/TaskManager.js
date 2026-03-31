@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Trash2, Loader2, Plus, Check, Calendar, X } from 'lucide-react';
 import {
   CATEGORY_LABELS,
@@ -39,40 +39,15 @@ function normalizeTask(task) {
   };
 }
 
-export default function TaskManager() {
-  const [tasks, setTasks] = useState([]);
+export default function TaskManager({ tasks, setTasks, loading, filterCategory }) {
   const [text, setText] = useState('');
   const [category, setCategory] = useState(DEFAULT_CATEGORY);
   const [priority, setPriority] = useState('medium');
-  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [dueDate, setDueDate] = useState('');
   const [editingDueDateId, setEditingDueDateId] = useState(null);
   const [editingDueDateVal, setEditingDueDateVal] = useState('');
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  async function fetchTasks() {
-    try {
-      const res = await fetch('/api/tasks');
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || '데이터베이스에 연결하지 못했습니다.');
-      }
-
-      setTasks(Array.isArray(data) ? data.map(normalizeTask) : []);
-      setErrorMsg(null);
-    } catch (err) {
-      console.error('Failed to fetch tasks:', err);
-      setErrorMsg(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function addTask(event) {
     event.preventDefault();
@@ -188,7 +163,11 @@ export default function TaskManager() {
     }
   }
 
-  const sortedTasks = [...tasks].sort((a, b) => {
+  const filteredTasks = filterCategory
+    ? tasks.filter((t) => normalizeCategory(t.category) === filterCategory)
+    : tasks;
+
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
     const aHasDue = Boolean(a.due_date);
     const bHasDue = Boolean(b.due_date);
 

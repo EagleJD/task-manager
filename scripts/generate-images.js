@@ -67,33 +67,33 @@ function washiTape(width, height, c1, c2, sw) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 1. HERO BANNER  1520 × 480
+// 1. HERO BANNER  1520 × 360
 // ─────────────────────────────────────────────────────────────────────────────
 function heroSvg(gaeguB64) {
   const fontFace = gaeguB64
     ? `<style>@font-face{font-family:'Gaegu';src:url('data:font/truetype;base64,${gaeguB64}') format('truetype');font-weight:700;}</style>`
     : '';
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="480">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="360">
   <defs>${fontFace}
-    <clipPath id="frame"><rect width="1520" height="480"/></clipPath>
+    <clipPath id="frame"><rect width="1520" height="360"/></clipPath>
   </defs>
   <g clip-path="url(#frame)">
     <!-- Background -->
-    <rect width="1520" height="480" fill="#fff5f8"/>
+    <rect width="1520" height="360" fill="#fff5f8"/>
     <!-- Diary lines -->
-    ${diaryLines(1520, 55, 480, 28, '#d4b0c0', 0.38)}
+    ${diaryLines(1520, 41, 360, 21, '#d4b0c0', 0.38)}
     <!-- Washi tape top -->
     ${washiTape(1520, 26, '#ffb3c6', '#b8d4f5', 10)}
     <!-- Ring bindings -->
-    ${ringBindings([253, 507, 760, 1013, 1267], 25, 19, 9)}
+    ${ringBindings([253, 507, 760, 1013, 1267], 20, 19, 9)}
     <!-- Yellow highlighter -->
-    <rect x="340" y="270" width="840" height="80" fill="#ffe8a0" opacity="0.70" rx="6"/>
+    <rect x="340" y="202" width="840" height="60" fill="#ffe8a0" opacity="0.70" rx="6"/>
     <!-- Sparkles -->
-    ${sparklePath(218, 312, 34, '#ffb3c6')}
-    ${sparklePath(1302, 312, 34, '#ffb3c6')}
+    ${sparklePath(218, 234, 34, '#ffb3c6')}
+    ${sparklePath(1302, 234, 34, '#ffb3c6')}
     <!-- Title -->
-    <text x="760" y="336"
+    <text x="760" y="252"
       font-family="Gaegu, 'Patrick Hand', Georgia, serif"
       font-size="108" font-weight="700"
       fill="#5d3f6a" text-anchor="middle"
@@ -270,10 +270,10 @@ async function main() {
   // 1. Hero Banner
   const h = heroSvg(gaeguB64);
   await sharp(Buffer.from(h))
-    .resize(1520, 480)
+    .resize(1520, 360)
     .png()
     .toFile(path.join(OUT, 'hero-title.png'));
-  console.log('  ✓ hero-title.png  (1520×480)');
+  console.log('  ✓ hero-title.png  (1520×360)');
 
   // 2. OG Image
   const o = ogSvg(gaeguB64, mplusB64);

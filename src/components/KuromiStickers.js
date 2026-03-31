@@ -48,46 +48,46 @@ function createRandom(seed) {
 //   sizeMin/Max — rendered pixel size range
 function getZones(width, height) {
   if (width < 768) {
-    // Mobile: 4 corner anchors only — minimal, non-obstructive
+    // Mobile: 4 corner zones, dense enough to read as a sticker diary
     return [
-      { cx: width * 0.13, cy: 190,            count: 2, spread: 50, sizeMin: 72, sizeMax: 88 },
-      { cx: width * 0.87, cy: 190,            count: 2, spread: 50, sizeMin: 72, sizeMax: 88 },
-      { cx: width * 0.13, cy: height * 0.82,  count: 2, spread: 50, sizeMin: 70, sizeMax: 84 },
-      { cx: width * 0.87, cy: height * 0.82,  count: 2, spread: 50, sizeMin: 70, sizeMax: 84 },
+      { cx: width * 0.13, cy: 190,            count: 5, spread: 64, sizeMin: 72, sizeMax: 96  },
+      { cx: width * 0.87, cy: 190,            count: 5, spread: 64, sizeMin: 72, sizeMax: 96  },
+      { cx: width * 0.13, cy: height * 0.80,  count: 4, spread: 60, sizeMin: 70, sizeMax: 90  },
+      { cx: width * 0.87, cy: height * 0.80,  count: 4, spread: 60, sizeMin: 70, sizeMax: 90  },
     ];
   }
 
   if (width < 1100) {
-    // Tablet: 6 edge clusters
+    // Tablet: 6 edge clusters — generous overlap encouraged
     return [
-      { cx: width * 0.07, cy: 200,            count: 3, spread: 60, sizeMin: 78, sizeMax: 96  },
-      { cx: width * 0.93, cy: 200,            count: 3, spread: 60, sizeMin: 78, sizeMax: 96  },
-      { cx: width * 0.05, cy: height * 0.44,  count: 3, spread: 56, sizeMin: 78, sizeMax: 94  },
-      { cx: width * 0.95, cy: height * 0.44,  count: 3, spread: 56, sizeMin: 78, sizeMax: 94  },
-      { cx: width * 0.10, cy: height * 0.82,  count: 2, spread: 58, sizeMin: 76, sizeMax: 90  },
-      { cx: width * 0.90, cy: height * 0.82,  count: 2, spread: 58, sizeMin: 76, sizeMax: 90  },
+      { cx: width * 0.07, cy: 200,            count: 6, spread: 72, sizeMin: 80, sizeMax: 108 },
+      { cx: width * 0.93, cy: 200,            count: 6, spread: 72, sizeMin: 80, sizeMax: 108 },
+      { cx: width * 0.05, cy: height * 0.44,  count: 6, spread: 68, sizeMin: 80, sizeMax: 106 },
+      { cx: width * 0.95, cy: height * 0.44,  count: 6, spread: 68, sizeMin: 80, sizeMax: 106 },
+      { cx: width * 0.10, cy: height * 0.80,  count: 5, spread: 70, sizeMin: 78, sizeMax: 100 },
+      { cx: width * 0.90, cy: height * 0.80,  count: 5, spread: 70, sizeMin: 78, sizeMax: 100 },
     ];
   }
 
-  // Desktop: 10 clusters anchored to the margins and vertical edges.
-  // Left/right pairs mirror each other for bilateral symmetry — a Gestalt
-  // balance principle that reads as orderly even while feeling playful.
+  // Desktop: 10 clusters, 7–8 stickers each → ~74 total.
+  // Bold density makes the diary-sticker aesthetic unmistakable.
+  // Bilateral symmetry (Gestalt balance) keeps it feeling orderly despite density.
   return [
-    // Top corners
-    { cx: width * 0.07,  cy: 170,            count: 3, spread: 66, sizeMin: 84, sizeMax: 104 },
-    { cx: width * 0.93,  cy: 170,            count: 3, spread: 66, sizeMin: 84, sizeMax: 104 },
+    // Top corners — large anchors
+    { cx: width * 0.07,  cy: 170,            count: 8, spread: 80, sizeMin: 88, sizeMax: 128 },
+    { cx: width * 0.93,  cy: 170,            count: 8, spread: 80, sizeMin: 88, sizeMax: 128 },
     // Upper flanks (flanking the hero)
-    { cx: width * 0.16,  cy: 360,            count: 3, spread: 60, sizeMin: 80, sizeMax: 98  },
-    { cx: width * 0.84,  cy: 360,            count: 3, spread: 60, sizeMin: 80, sizeMax: 98  },
+    { cx: width * 0.15,  cy: 380,            count: 7, spread: 74, sizeMin: 84, sizeMax: 116 },
+    { cx: width * 0.85,  cy: 380,            count: 7, spread: 74, sizeMin: 84, sizeMax: 116 },
     // Mid flanks (flanking the kanban board)
-    { cx: width * 0.06,  cy: height * 0.42,  count: 3, spread: 62, sizeMin: 86, sizeMax: 104 },
-    { cx: width * 0.94,  cy: height * 0.42,  count: 3, spread: 62, sizeMin: 86, sizeMax: 104 },
+    { cx: width * 0.06,  cy: height * 0.42,  count: 8, spread: 76, sizeMin: 90, sizeMax: 124 },
+    { cx: width * 0.94,  cy: height * 0.42,  count: 8, spread: 76, sizeMin: 90, sizeMax: 124 },
     // Lower flanks
-    { cx: width * 0.11,  cy: height * 0.72,  count: 3, spread: 60, sizeMin: 80, sizeMax: 98  },
-    { cx: width * 0.89,  cy: height * 0.72,  count: 3, spread: 60, sizeMin: 80, sizeMax: 98  },
+    { cx: width * 0.11,  cy: height * 0.72,  count: 7, spread: 72, sizeMin: 84, sizeMax: 116 },
+    { cx: width * 0.89,  cy: height * 0.72,  count: 7, spread: 72, sizeMin: 84, sizeMax: 116 },
     // Bottom edge
-    { cx: width * 0.24,  cy: height * 0.93,  count: 2, spread: 64, sizeMin: 76, sizeMax: 92  },
-    { cx: width * 0.76,  cy: height * 0.93,  count: 2, spread: 64, sizeMin: 76, sizeMax: 92  },
+    { cx: width * 0.22,  cy: height * 0.93,  count: 6, spread: 78, sizeMin: 80, sizeMax: 108 },
+    { cx: width * 0.78,  cy: height * 0.93,  count: 6, spread: 78, sizeMin: 80, sizeMax: 108 },
   ];
 }
 
@@ -108,9 +108,9 @@ function buildStickers(width, height) {
                          zone.cy + (random() - 0.5) * zone.spread * 2));
       // Cycle through all 14 sources evenly across zones
       const source   = SOURCES[Math.floor(random() * SOURCES.length)];
-      // Subtle opacity variation (0.5–0.7) creates natural depth:
-      // stickers recede behind content without disappearing.
-      const opacity  = 0.50 + random() * 0.20;
+      // Opacity variation (0.55–0.80): enough presence to read as decorative
+      // diary stickers, still receding behind main content.
+      const opacity  = 0.55 + random() * 0.25;
 
       stickers.push({ ...source, left, top, size, rotation: `${rotation}deg`, opacity });
     }
