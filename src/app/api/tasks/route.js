@@ -12,24 +12,16 @@ function shapeTask(task) {
 }
 
 export async function GET() {
+  const sql = getSql();
+  if (!sql) {
+    return NextResponse.json({ error: DATABASE_ERROR_MESSAGE }, { status: 503 });
+  }
+
   try {
-    const sql = getSql();
-
-    if (!sql) {
-      return NextResponse.json({ error: DATABASE_ERROR_MESSAGE }, { status: 503 });
-    }
-
-    await sql`ALTER TABLE tasks ADD COLUMN IF NOT EXISTS due_date TIMESTAMP WITH TIME ZONE;`;
     const rows = await sql`SELECT * FROM tasks ORDER BY position ASC, created_at DESC`;
     return NextResponse.json(rows.map(shapeTask));
   } catch (error) {
     if (error.message.includes('relation "tasks" does not exist') || error.message.includes('tasks" does not exist')) {
-      const sql = getSql();
-
-      if (!sql) {
-        return NextResponse.json({ error: DATABASE_ERROR_MESSAGE }, { status: 503 });
-      }
-
       await sql`
         CREATE TABLE IF NOT EXISTS tasks (
           id SERIAL PRIMARY KEY,

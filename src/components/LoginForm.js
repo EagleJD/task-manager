@@ -28,7 +28,9 @@ export default function LoginForm() {
     const data = await res.json();
     if (res.ok) {
       const params = new URLSearchParams(window.location.search);
-      router.push(params.get('from') || '/');
+      const from = params.get('from');
+      const safePath = from && from.startsWith('/') && !from.startsWith('//') ? from : '/';
+      router.push(safePath);
     } else {
       setError(data.error || '로그인에 실패했습니다.');
       setLoading(false);
